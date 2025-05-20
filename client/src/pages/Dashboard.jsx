@@ -1,9 +1,10 @@
 import React from 'react'
+import SelectActionCard from '../components/Card'
 
 const Dashboard = () => {
   return (
     <div>
-      Welcome to Dashboard
+      <SelectActionCard/>
     </div>
   )
 }

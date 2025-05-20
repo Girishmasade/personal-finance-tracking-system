@@ -45,7 +45,7 @@ const AppLayout = () => {
   const bottomNav = [
 
     { text: "Settings", icon: <PersonIcon />, path: "/setting" },
-    { text: "Logout", icon: <PersonIcon />, path: "/logout" },
+    { text: "Logout", icon: <PersonIcon />},
   ]
 
   const location = useLocation();

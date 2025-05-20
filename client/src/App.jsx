@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard'
 import Transactions from './pages/Transactions'
 import Charts from './pages/Charts'
 import Profile from './pages/Profile'
+import Signup from './pages/authantication/Signup'
+import Login from './pages/authantication/Login'
 
 const App = () => {
   return (
@@ -21,7 +23,9 @@ const App = () => {
         <Route path='/charts' element={<Charts />} />
         <Route path='/profile' element={<Profile />} />
       </Route>
-      
+
+      <Route path='/signup' element={<Signup/>}/>
+      <Route path='/login' element={<Login/>}/>
      </Routes>
     </main>
   )
