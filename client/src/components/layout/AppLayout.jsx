@@ -27,12 +27,14 @@ import PieChartIcon from "@mui/icons-material/PieChart";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
+import AddTransactions from "../AddTransactions";
 
 const drawerWidth = 240;
 
 const AppLayout = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
+  const [opentransaction, setOpenTransaction] = useState(false)
   const location = useLocation();
 
   const handleDrawerToggle = () => {
@@ -50,6 +52,8 @@ const AppLayout = () => {
     { text: "Settings", icon: <SettingsIcon />, path: "/setting" },
     { text: "Logout", icon: <LogoutIcon /> },
   ];
+
+
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -87,6 +91,7 @@ const AppLayout = () => {
               variant="contained"
               size="small"
               sx={{ backgroundColor: "#000" }}
+              onClick={() => setOpenTransaction(true)}
             >
               + Add Transaction
             </Button>
@@ -212,6 +217,10 @@ const AppLayout = () => {
         <Toolbar />
         <Outlet />
       </Box>
+      <AddTransactions
+      opentransaction={opentransaction}
+      setOpenTransaction={setOpenTransaction}
+    />
     </Box>
   );
 };

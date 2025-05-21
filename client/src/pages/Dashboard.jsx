@@ -7,6 +7,7 @@ const Dashboard = () => {
       <SelectActionCard/>
       <div className="pt-10">
         <Table/>
+        
       </div>
     </div>
   )
