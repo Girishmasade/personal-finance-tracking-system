@@ -1,10 +1,12 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import CardActionArea from "@mui/material/CardActionArea";
-import { IconButton } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  CardActionArea,
+  IconButton,
+} from "@mui/material";
 import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
 import ArrowCircleDownRoundedIcon from "@mui/icons-material/ArrowCircleDownRounded";
 import SavingsRoundedIcon from "@mui/icons-material/SavingsRounded";
@@ -31,67 +33,65 @@ const cards = [
 
 function SelectActionCard() {
   const [selectedCard, setSelectedCard] = React.useState(0);
+
   return (
     <Box
       sx={{
-        maxWidth: "120%",
         width: "100%",
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(min(200px, 100%), 1fr))",
+        gridTemplateColumns: "repeat(auto-fill, minmax(min(400px, 100%), 1fr))",
         gap: 2,
       }}
     >
-      {cards.map((card, index) => (
-        <Card>
-          <CardActionArea
-            onClick={() => setSelectedCard(index)}
-            data-active={selectedCard === index ? "" : undefined}
-            sx={{
-              height: "100%",
-            }}
-          >
-            <Typography
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+      {cards.map((card, index) => {
+        const Icon = card.icon;
+        const isPositive =
+          card.icon === ArrowCircleUpRoundedIcon ||
+          card.icon === SavingsRoundedIcon;
+
+        return (
+          <Card key={card.name}>
+            <CardActionArea
+              onClick={() => setSelectedCard(index)}
+              data-active={selectedCard === index ? "" : undefined}
+              sx={{ height: "100%", width: "100%" }}
             >
-              <CardContent sx={{ height: "100%" }}>
-                <Typography variant="h5" component="div">
-                  {card.name}
-                </Typography>
-                <Typography variant="h5" component="div" sx={{fontWeight: "bold", fontSize: '30px'}}>
-                 $ {card.price}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color:
-                      card.icon === ArrowCircleUpRoundedIcon ||
-                      card.icon === SavingsRoundedIcon
-                        ? "#4ade80"
-                        : "#ef4444",
-                  }}
-                >
-                  {card.inc}
-                </Typography>
-              </CardContent>
-              <IconButton
+              <Box
                 sx={{
-                  color:
-                    card.icon === ArrowCircleUpRoundedIcon ||
-                    card.icon === SavingsRoundedIcon
-                      ? "#4ade80"
-                      : "#ef4444",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  p: 2,
                 }}
               >
-                <card.icon />
-              </IconButton>
-            </Typography>
-          </CardActionArea>
-        </Card>
-      ))}
+                <CardContent sx={{ flex: 1 }}>
+                  <Typography variant="h6">{card.name}</Typography>
+                  <Typography variant="h4" sx={{ fontWeight: "bold", mt: 1 }}>
+                    ${card.price}
+                  </Typography>
+                  {card.inc && (
+                    <Typography
+                      variant="body2"
+                      sx={{ color: isPositive ? "#4ade80" : "#ef4444", mt: 1 }}
+                    >
+                      {card.inc}
+                    </Typography>
+                  )}
+                </CardContent>
+
+                <IconButton
+                  sx={{
+                    color: isPositive ? "#4ade80" : "#ef4444",
+                    fontSize: 40,
+                  }}
+                >
+                  <Icon fontSize="inherit" />
+                </IconButton>
+              </Box>
+            </CardActionArea>
+          </Card>
+        );
+      })}
     </Box>
   );
 }
