@@ -39,8 +39,8 @@ const dataTable = () => {
     "&:last-child td, &:last-child th": {
       borderBottom: 0,
     },
-    borderRadius: "8px", 
-    overflow: "hidden", 
+    borderRadius: "8px",
+    overflow: "hidden",
   }));
 
   function createData(date, category, description, amount, type) {
@@ -59,60 +59,67 @@ const dataTable = () => {
     createData("7/10/2023", "Utilities", "Electricity bill", 120.0, "Expense"),
     createData("7/5/2023", "Housing", "Rent payment", 1200.0, "Expense"),
     createData("7/1/2023", "Salary", "Monthly salary", 3500.0, "Income"),
+    createData("7/1/2023", "Salary", "Monthly salary", 3500.0, "Income"),
   ];
 
   return (
     <div>
-        <Text title={'Recent Transactions'}/>
-   <TableContainer component={Paper} style={{ maxHeight: 500, overflowY: 'hidden' }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Date</StyledTableCell>
-            <StyledTableCell>Category</StyledTableCell>
-            <StyledTableCell>Description</StyledTableCell>
-            <StyledTableCell>Amount</StyledTableCell>
-            <StyledTableCell>Type</StyledTableCell>
-            <StyledTableCell align="right">Actions</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.date}>
-              <StyledTableCell>{row.date}</StyledTableCell>
-              <StyledTableCell>{row.category}</StyledTableCell>
-              <StyledTableCell>{row.description}</StyledTableCell>
-              <StyledTableCell sx={{fontWeight: '600'}}>${row.amount}</StyledTableCell>
-              <StyledTableCell>
-  <span
-    style={{
-      padding: "4px 8px",
-      borderRadius: "6px",
-      fontWeight: 400,
-      backgroundColor: row.type === "Expense" ? "#fee2e2" : "#d1fae5",
-      color: row.type === "Expense" ? "#b91c1c" : "#065f46",
-    }}
-  >
-    {row.type}
-  </span>
-</StyledTableCell>
-              <StyledTableCell
-                align="right"
-                sx={{ display: "flex", gap: "12px" }}
-              >
-                <IconButton sx={{ color: "red" }}>
-                  <DeleteOutlineOutlinedIcon />
-                </IconButton>
+      <Text title={"Recent Transactions"} />
+      <TableContainer
+        component={Paper}
+        style={{ maxHeight: 500, overflowY: "hidden" }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Date</StyledTableCell>
+              <StyledTableCell>Category</StyledTableCell>
+              <StyledTableCell>Description</StyledTableCell>
+              <StyledTableCell>Amount</StyledTableCell>
+              <StyledTableCell>Type</StyledTableCell>
+              <StyledTableCell align="right">Actions</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <StyledTableRow key={row.date}>
+                <StyledTableCell>{row.date}</StyledTableCell>
+                <StyledTableCell>{row.category}</StyledTableCell>
+                <StyledTableCell>{row.description}</StyledTableCell>
+                <StyledTableCell sx={{ fontWeight: "600" }}>
+                  ${row.amount}
+                </StyledTableCell>
+                <StyledTableCell>
+                  <span
+                    style={{
+                      padding: "4px 8px",
+                      borderRadius: "6px",
+                      fontWeight: 400,
+                      backgroundColor:
+                        row.type === "Expense" ? "#fee2e2" : "#d1fae5",
+                      color: row.type === "Expense" ? "#b91c1c" : "#065f46",
+                    }}
+                  >
+                    {row.type}
+                  </span>
+                </StyledTableCell>
+                <StyledTableCell
+                  align="right"
+                  sx={{ display: "flex", gap: "12px" }}
+                >
+                  <IconButton sx={{ color: "red" }}>
+                    <DeleteOutlineOutlinedIcon />
+                  </IconButton>
 
-                <IconButton sx={{ color: "green" }}>
-                  <BorderColorOutlinedIcon />
-                </IconButton>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                  <IconButton sx={{ color: "green" }}>
+                    <BorderColorOutlinedIcon />
+                  </IconButton>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };
