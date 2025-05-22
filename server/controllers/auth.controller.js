@@ -62,25 +62,54 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user._id, 
-        username: user.username,
-        email: user.email
-     },
+      { id: user._id, username: user.username, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    return res.status(200).json({ success: true, 
-        token, 
-        user: {
-            id: user._id,
-            username: user.username,
-            email: user.email
-        } });
-
+    return res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
 
+export const forgetPass = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "email is required" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "not a valid email address" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: "Password reset successfull",
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
