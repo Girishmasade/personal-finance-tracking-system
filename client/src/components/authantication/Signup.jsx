@@ -1,0 +1,120 @@
+import {
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+  InputAdornment,
+  IconButton,
+  Box,
+  Button,
+} from "@mui/material";
+import React, { useState } from "react";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Link } from "react-router-dom";
+const SignupPage = () => {
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(form);
+  };
+
+  return (
+    <Grid
+      container
+      component="main"
+      sx={{ height: "100vh", backgroundColor: "#f5f5f5" }}
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Grid item xs={11} sm={8} md={5} lg={4}>
+        <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
+          <Typography variant="h5" fontWeight="bold" gutterBottom>
+            Register your Account
+          </Typography>
+          <Typography variant="body2" color="text.secondary" mb={3}>
+            Please enter your credentials to continue.
+          </Typography>
+
+          <form>
+            <TextField
+              fullWidth
+              type="text"
+              name="username"
+              label="Username"
+              variant="outlined"
+              margin="normal"
+              required
+            />
+
+            <TextField
+              fullWidth
+              type="email"
+              name="email"
+              label="Email"
+              variant="outlined"
+              margin="normal"
+              required
+            />
+
+            <TextField
+              fullWidth
+              type={showPassword ? "text" : "password"}
+              name="password"
+              label="Password"
+              variant="outlined"
+              margin="normal"
+              required
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Typography variant="body2" sx={{ cursor: 'pointer', color: 'primary.main' }}>
+              Forgot Password?
+            </Typography>
+
+            <Box sx={{display: 'flex', justifyContent: 'space-between', paddingTop: '8px'}}>
+              <Typography>
+                Already Have an Account
+              </Typography>
+
+              <Link to='/login' className='text-blue-500 hover:text-blue-600 underline'>Login</Link>
+            </Box>
+
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              sx={{
+                mt: 2,
+                py: 1.5,
+                backgroundColor: '#111',
+                '&:hover': { backgroundColor: '#333' }
+              }}
+            >
+              Signup
+            </Button>
+          </form>
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+};
+
+export default SignupPage;

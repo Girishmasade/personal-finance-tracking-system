@@ -6,8 +6,8 @@ import Dashboard from './pages/Dashboard'
 import Transactions from './pages/Transactions'
 import Charts from './pages/Charts'
 import Profile from './pages/Profile'
-import Signup from './pages/authantication/Signup'
-import Login from './pages/authantication/Login'
+import LoginPage from './components/authantication/Login'
+import SignupPage from './components/authantication/Signup'
 
 const App = () => {
   return (
@@ -24,8 +24,8 @@ const App = () => {
         <Route path='/profile' element={<Profile />} />
       </Route>
 
-      <Route path='/signup' element={<Signup/>}/>
-      <Route path='/login' element={<Login/>}/>
+      <Route path='/signup' element={<SignupPage/>}/>
+      <Route path='/login' element={<LoginPage/>}/>
      </Routes>
     </main>
   )
