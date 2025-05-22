@@ -1,25 +1,23 @@
+import React from "react";
 import {
   IconButton,
-  ListItemIcon,
   Paper,
   TableBody,
   TableContainer,
   TableHead,
   TableRow,
 } from "@mui/material";
-import React from "react";
 import Table from "@mui/material/Table";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import Text from "./Text";
-const dataTable = () => {
+
+const DataTable = ({ rows = [] }) => {
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       border: "1px solid #ccc",
       fontSize: 18,
-      // borderRadius: '8px 8px 0 0',
       backgroundColor: theme.palette.grey[300],
       color: theme.palette.grey[600],
     },
@@ -39,50 +37,25 @@ const dataTable = () => {
     "&:last-child td, &:last-child th": {
       borderBottom: 0,
     },
-    borderRadius: "8px",
-    overflow: "hidden",
   }));
 
-  function createData(date, category, description, amount, type) {
-    return { date, category, description, amount, type };
-  }
-
-  const rows = [
-    createData("7/18/2023", "Food", "Grocery shopping", 85.0, "Expense"),
-    createData(
-      "7/15/2023",
-      "Freelance",
-      "Website design project",
-      500.0,
-      "Income"
-    ),
-    createData("7/10/2023", "Utilities", "Electricity bill", 120.0, "Expense"),
-    createData("7/5/2023", "Housing", "Rent payment", 1200.0, "Expense"),
-    createData("7/1/2023", "Salary", "Monthly salary", 3500.0, "Income"),
-    createData("7/1/2023", "Salary", "Monthly salary", 3500.0, "Income"),
-  ];
-
   return (
-    <div>
-      <Text title={"Recent Transactions"} />
-      <TableContainer
-        component={Paper}
-        style={{ maxHeight: 500, overflowY: "hidden" }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Date</StyledTableCell>
-              <StyledTableCell>Category</StyledTableCell>
-              <StyledTableCell>Description</StyledTableCell>
-              <StyledTableCell>Amount</StyledTableCell>
-              <StyledTableCell>Type</StyledTableCell>
-              <StyledTableCell align="right">Actions</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <StyledTableRow key={row.date}>
+    <TableContainer component={Paper} style={{ maxHeight: 500 }}>
+      <Table sx={{ minWidth: 600 }} aria-label="transactions table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>Date</StyledTableCell>
+            <StyledTableCell>Category</StyledTableCell>
+            <StyledTableCell>Description</StyledTableCell>
+            <StyledTableCell>Amount</StyledTableCell>
+            <StyledTableCell>Type</StyledTableCell>
+            <StyledTableCell align="right">Actions</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.length > 0 ? (
+            rows.map((row, index) => (
+              <StyledTableRow key={index}>
                 <StyledTableCell>{row.date}</StyledTableCell>
                 <StyledTableCell>{row.category}</StyledTableCell>
                 <StyledTableCell>{row.description}</StyledTableCell>
@@ -103,25 +76,27 @@ const dataTable = () => {
                     {row.type}
                   </span>
                 </StyledTableCell>
-                <StyledTableCell
-                  align="right"
-                  sx={{ display: "flex", gap: "12px" }}
-                >
+                <StyledTableCell align="right" sx={{ display: "flex", gap: "12px" }}>
                   <IconButton sx={{ color: "red" }}>
                     <DeleteOutlineOutlinedIcon />
                   </IconButton>
-
                   <IconButton sx={{ color: "green" }}>
                     <BorderColorOutlinedIcon />
                   </IconButton>
                 </StyledTableCell>
               </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
+            ))
+          ) : (
+            <StyledTableRow>
+              <StyledTableCell colSpan={6} align="center">
+                No results found.
+              </StyledTableCell>
+            </StyledTableRow>
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
-export default dataTable;
+export default DataTable;
