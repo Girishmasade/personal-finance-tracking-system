@@ -11,19 +11,36 @@ import {
 import React, { useState } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useRegisterUserMutation } from "../../Redux/api/apiSlice";
+
 const SignupPage = () => {
+  
+  const navigate = useNavigate()
+  const [registerUser] = useRegisterUserMutation()
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
   });
 
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log(form);
+    // console.log(form);
+    try {
+      const res = await registerUser(form).unwrap()
+      console.log('user registered', res);
+      navigate('/')
+    } catch (error) {
+      console.error('Registration error:', error);
+
+    }
   };
 
   return (
@@ -43,7 +60,7 @@ const SignupPage = () => {
             Please enter your credentials to continue.
           </Typography>
 
-          <form>
+          <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
               type="text"
@@ -51,6 +68,8 @@ const SignupPage = () => {
               label="Username"
               variant="outlined"
               margin="normal"
+              value={form.username}
+              onChange={handleChange}
               required
             />
 
@@ -61,6 +80,8 @@ const SignupPage = () => {
               label="Email"
               variant="outlined"
               margin="normal"
+              value={form.email}
+              onChange={handleChange}
               required
             />
 
@@ -71,6 +92,8 @@ const SignupPage = () => {
               label="Password"
               variant="outlined"
               margin="normal"
+              value={form.password}
+              onChange={handleChange}
               required
               InputProps={{
                 endAdornment: (
