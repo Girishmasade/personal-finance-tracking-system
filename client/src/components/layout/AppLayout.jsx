@@ -36,7 +36,7 @@ const drawerWidth = 240;
 const AppLayout = () => {
 
   const {user} = useSelector((state) => state.auth)
-  console.log(user);
+  // console.log(user);
   
 
   const theme = useTheme();
@@ -109,7 +109,7 @@ const AppLayout = () => {
                   color: "white",
                 }}
               >
-                {user.username.charAt(0)}
+                {user?.username.charAt(0)}
               </Box>
             </IconButton>
           </Box>
