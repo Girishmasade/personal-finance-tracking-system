@@ -12,12 +12,13 @@ import React, { useState } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Link, useNavigate } from "react-router-dom";
-import { useRegisterUserMutation } from "../../Redux/api/apiSlice";
+import { useRegisterUserMutation } from "../../Redux/app/authApiSlice";
+
 
 const SignupPage = () => {
   
   const navigate = useNavigate()
-  const [registerUser] = useRegisterUserMutation()
+  const [registerUser, {isLoading, error}] = useRegisterUserMutation()
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -36,7 +37,7 @@ const SignupPage = () => {
     try {
       const res = await registerUser(form).unwrap()
       console.log('user registered', res);
-      navigate('/')
+      navigate('/login')
     } catch (error) {
       console.error('Registration error:', error);
 
@@ -51,7 +52,7 @@ const SignupPage = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Grid item xs={11} sm={8} md={5} lg={4}>
+      <Grid>
         <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             Register your Account
@@ -108,10 +109,6 @@ const SignupPage = () => {
                 ),
               }}
             />
-            <Typography variant="body2" sx={{ cursor: 'pointer', color: 'primary.main' }}>
-              Forgot Password?
-            </Typography>
-
             <Box sx={{display: 'flex', justifyContent: 'space-between', paddingTop: '8px'}}>
               <Typography>
                 Already Have an Account
@@ -124,6 +121,7 @@ const SignupPage = () => {
               fullWidth
               type="submit"
               variant="contained"
+              disabled={isLoading}
               sx={{
                 mt: 2,
                 py: 1.5,
@@ -131,8 +129,9 @@ const SignupPage = () => {
                 '&:hover': { backgroundColor: '#333' }
               }}
             >
-              Signup
+              {isLoading ? 'Signup...' : 'Signup'}
             </Button>
+            {error && <p style={{color: 'red'}}>something went wrong</p>}
           </form>
         </Paper>
       </Grid>

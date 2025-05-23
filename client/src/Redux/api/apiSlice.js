@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const apiSlice = createApi({
-    reducerPath: 'user',
+    reducerPath: 'api',
     baseQuery: fetchBaseQuery({
-        baseUrl: import.meta.env.VITE_BACKEND_URL,
+        baseUrl: import.meta.env.VITE_BACKEND_URL + "/api",
         prepareHeaders: (headers, {getState}) => {
             const token = getState().auth.token
             if (token) {
@@ -12,16 +12,19 @@ export const apiSlice = createApi({
             return headers
         }
     }),
-
-    endpoints: (builder) => ({
-        registerUser: builder.mutation({
-            query: (userData) => ({
-                url: '/register',
-                method: 'POST',
-                body: userData
-            })
-        })
-    })
+    tagTypes: [],
+    endpoints: (builder) => ({})
+ 
 })
 
-export const {useRegisterUserMutation} = apiSlice
+// export const {useRegisterUserMutation} = apiSlice
+
+//    endpoints: (builder) => ({
+//     registerUser: builder.mutation({
+//         query: (userData) => ({
+//             url: '/user/register',
+//             method: 'POST',
+//             body: userData
+//         })
+//     })
+// })

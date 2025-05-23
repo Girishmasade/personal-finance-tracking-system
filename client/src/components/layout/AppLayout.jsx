@@ -28,10 +28,17 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AddTransactions from "../AddTransactions";
+import {useSelector} from 'react-redux'
+import { logout } from "../../Redux/api/authSlice";
 
 const drawerWidth = 240;
 
 const AppLayout = () => {
+
+  const {user} = useSelector((state) => state.auth)
+  console.log(user);
+  
+
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [opentransaction, setOpenTransaction] = useState(false)
@@ -48,12 +55,9 @@ const AppLayout = () => {
     { text: "Profile", icon: <PersonIcon />, path: "/profile" },
   ];
 
-  const bottomNav = [
-    { text: "Settings", icon: <SettingsIcon />, path: "/setting" },
-    { text: "Logout", icon: <LogoutIcon /> },
-  ];
-
-
+  const handleLogout = () => {
+    logout()
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -105,7 +109,7 @@ const AppLayout = () => {
                   color: "white",
                 }}
               >
-                A
+                {user.username.charAt(0)}
               </Box>
             </IconButton>
           </Box>
@@ -166,6 +170,21 @@ const AppLayout = () => {
 
         <Box>
           <List>
+            <ListItem component={Link} to='/setting'>
+              <ListItemIcon>
+              <SettingsIcon />
+              </ListItemIcon>
+              {open && <ListItemText>Setting</ListItemText>}
+            </ListItem>
+
+            <ListItem onClick={handleLogout} sx={{color: 'red'}} component={Link} to='/login'>
+              <ListItemIcon>
+              <LogoutIcon sx={{color: 'red'}}/>
+              </ListItemIcon>
+              {open && <ListItemText >Logout</ListItemText>}
+            </ListItem>
+          </List>
+          {/* <List>
             {bottomNav.map((item) => {
               const isActive = location.pathname === item.path;
               const isLogout = item.text.toLowerCase().includes("logout");
@@ -199,7 +218,7 @@ const AppLayout = () => {
                 </ListItem>
               );
             })}
-          </List>
+          </List> */}
         </Box>
       </Drawer>
 
