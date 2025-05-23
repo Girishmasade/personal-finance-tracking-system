@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Table from "../components/Table";
 import Text from "../components/Text";
-import transactions from "../assets/transactions";
 import {
   Button,
   Grid,
@@ -12,6 +11,7 @@ import {
   Box,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { useGetTransactionsQuery } from "../Redux/app/transactionApiSlice";
 
 const Transactions = () => {
   const [search, setSearch] = useState("");
@@ -26,11 +26,18 @@ const Transactions = () => {
   //   { date: "7/1/2023", category: "Salary", description: "Monthly salary", amount: 3500.0, type: "Income" },
   // ];
 
+  const {data, error, isLoading} = useGetTransactionsQuery()
+  const transactions = data?.transaction || []
+
+  console.log(data);
+  
+
   const filteredRows = transactions.filter((row) =>
     Object.values(row).join(" ").toLowerCase().includes(search.toLowerCase()) &&
     (type === "All Types" || row.type === type) &&
     (category === "All Categories" || row.category === category)
   );
+  
 
   const handleReset = () => {
     setSearch("");
@@ -117,10 +124,15 @@ const Transactions = () => {
         </Grid>
       </Grid>
 
+      {isLoading && <Typography>Loading transactions...</Typography>}
+      {error && <Typography color="error">Failed to load transactions.</Typography>}
+
       {/* Table Section */}
-      <Box pt={4}>
-        <Table rows={filteredRows} />
-      </Box>
+      {!isLoading && !error && (
+        <Box pt={4}>
+          <Table rows={filteredRows} />
+        </Box>
+      )}
     </Box>
   );
 };
