@@ -42,3 +42,45 @@ export const getTransaction = async (req, res) => {
     return res.status(500).json({success: false, message: error.message})
   }
 }
+
+export const updateTransactions = async (req, res) => {
+  try {
+    const {id} = req.params
+    const {updateData} = req.body
+    
+    const updateTrans = await Transaction.findByIdAndUpdate(id, updateData, {new: true})
+
+    console.log(updateTrans);
+    
+    return res.status(200).json({success: true, updateTrans})
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({success: false, message: error.message})
+  }
+}
+
+export const deleteTransaction = async (req, res) => {
+  try {
+    const {id} = req.params
+
+    // console.log(req.params);
+    
+    const trashed = await Transaction.findByIdAndDelete(id);
+    console.log(trashed);
+    
+
+    if (!trashed) {
+      return res.status(404).json({ status: false, message: "Transaction not found" });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: `Transaction Deleted successfully.`,
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ status: false, message: error.message });
+  }
+}

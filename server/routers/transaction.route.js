@@ -1,10 +1,12 @@
 import {Router} from 'express'
-import { addTransaction, getTransaction } from '../controllers/transaction.controller.js'
+import { addTransaction, deleteTransaction, getTransaction, updateTransactions } from '../controllers/transaction.controller.js'
 import { protectRoute } from '../middleware/protecteRoute.middleware.js'
 
 const transactionRoute = Router()
 
 transactionRoute.post('/add-transaction', protectRoute, addTransaction)
 transactionRoute.get('/get-transaction', protectRoute, getTransaction)
+transactionRoute.patch('/update-transaction/:id', protectRoute, updateTransactions)
+transactionRoute.delete('/delete-transaction/:id', protectRoute, deleteTransaction)
 
 export default transactionRoute
