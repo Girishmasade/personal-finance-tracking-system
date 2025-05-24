@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -15,7 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useAddTransactionMutation } from "../Redux/app/transactionApiSlice";
 
 const AddTransactions = ({ opentransaction, setOpenTransaction }) => {
-  const [AddTransactions, { isLoading, error }] = useAddTransactionMutation();
+  const [AddTransactions, { isLoading, error, refetch }] = useAddTransactionMutation();
 
   const [form, setForm] = useState({
     date: "",
@@ -24,6 +24,11 @@ const AddTransactions = ({ opentransaction, setOpenTransaction }) => {
     type: "Expense",
     description: "",
   });
+
+  // useEffect(() => {
+  //   setForm(form)
+  // }, [form])
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../components/Table";
 import Text from "../components/Text";
 import {
@@ -25,11 +25,12 @@ const Transactions = () => {
   //   { date: "7/5/2023", category: "Housing", description: "Rent payment", amount: 1200.0, type: "Expense" },
   //   { date: "7/1/2023", category: "Salary", description: "Monthly salary", amount: 3500.0, type: "Income" },
   // ];
+  
 
-  const {data, error, isLoading} = useGetTransactionsQuery()
+  const {data, error, isLoading, refetch} = useGetTransactionsQuery()
   const transactions = data?.transaction || []
 
-  console.log(data);
+  // console.log(data);
   
 
   const filteredRows = transactions.filter((row) =>

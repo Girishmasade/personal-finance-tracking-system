@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   IconButton,
   Paper,
@@ -12,6 +12,8 @@ import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import AddTransactions from "./AddTransactions";
+import { useDeleteTransactionsMutation } from "../Redux/app/transactionApiSlice";
 
 const DataTable = ({ rows = [] }) => {
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -38,6 +40,22 @@ const DataTable = ({ rows = [] }) => {
       borderBottom: 0,
     },
   }));
+
+  // const [isEdited, setIsEdited] = useState(false);
+  // const [opentransaction, setOpenTransaction] = useState(false);
+
+  const [deleteTransaction, refetch] = useDeleteTransactionsMutation()
+  
+  const handleDelete = async (id) => {
+      try {
+       await deleteTransaction(id).unwrap();
+       refetch()
+        console.log("Transaction deleted");
+      } catch (error) {
+        console.error("Delete failed:", error);
+      }
+  };
+  
 
   return (
     <TableContainer component={Paper} style={{ maxHeight: 500 }}>
@@ -76,12 +94,26 @@ const DataTable = ({ rows = [] }) => {
                     {row.type}
                   </span>
                 </StyledTableCell>
-                <StyledTableCell align="right" sx={{ display: "flex", gap: "12px" }}>
-                  <IconButton sx={{ color: "red" }}>
+                <StyledTableCell
+                  align="right"
+                  sx={{ display: "flex", gap: "12px" }}
+                >
+                  <IconButton 
+                  sx={{ color: "red" }}
+                  onClick={() => handleDelete(row._id)}
+                  >
                     <DeleteOutlineOutlinedIcon />
                   </IconButton>
-                  <IconButton sx={{ color: "green" }}>
-                    <BorderColorOutlinedIcon />
+
+                  <IconButton
+                   sx={{ color: "green" }}
+                   onClick={() => {
+                    setIsEdited(row)
+                    setOpenTransaction(true)}}
+                   >
+                    <BorderColorOutlinedIcon
+                     
+                    />
                   </IconButton>
                 </StyledTableCell>
               </StyledTableRow>
@@ -95,6 +127,12 @@ const DataTable = ({ rows = [] }) => {
           )}
         </TableBody>
       </Table>
+      {/* <AddTransactions
+        opentransaction={opentransaction}
+        setOpenTransaction={setOpenTransaction}
+        // isEdited={isEdited}
+        // setIsEdited={setIsEdited}
+      /> */}
     </TableContainer>
   );
 };

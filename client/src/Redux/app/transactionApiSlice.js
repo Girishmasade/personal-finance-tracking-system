@@ -18,8 +18,24 @@ export const transactionApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
                 credentials: 'include'
             })
+        }),
+
+        updateTransactions: builder.mutation({
+            query: ({id, updateData}) => ({
+                url: `${TRANSACTION_URI}/update-transaction/${id}`,
+                method: 'PUT',
+                body: {updateData},
+                credentials: 'include'
+            })
+        }),
+        deleteTransactions: builder.mutation({
+            query: (id) => ({
+                url: `${TRANSACTION_URI}/delete-transaction/${id}`,
+                method: 'DELETE',
+                credentials: 'include'
+            })
         })
     })
 })
 
-export const {useAddTransactionMutation, useGetTransactionsQuery} = transactionApiSlice
+export const {useAddTransactionMutation, useGetTransactionsQuery, useUpdateTransactionsMutation, useDeleteTransactionsMutation} = transactionApiSlice

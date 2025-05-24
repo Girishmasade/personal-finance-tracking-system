@@ -6,7 +6,7 @@ const transactionRoute = Router()
 
 transactionRoute.post('/add-transaction', protectRoute, addTransaction)
 transactionRoute.get('/get-transaction', protectRoute, getTransaction)
-transactionRoute.patch('/update-transaction/:id', protectRoute, updateTransactions)
+transactionRoute.put('/update-transaction/:id', protectRoute, updateTransactions)
 transactionRoute.delete('/delete-transaction/:id', protectRoute, deleteTransaction)
 
 export default transactionRoute
