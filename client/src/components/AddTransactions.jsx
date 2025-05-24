@@ -12,10 +12,17 @@ import {
   Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useAddTransactionMutation } from "../Redux/app/transactionApiSlice";
+import {
+  useAddTransactionMutation,
+  
+  useGetTransactionsQuery,
+  useUpdateTransactionsMutation,
+} from "../Redux/app/transactionApiSlice";
 
-const AddTransactions = ({ opentransaction, setOpenTransaction }) => {
-  const [AddTransactions, { isLoading, error, refetch }] = useAddTransactionMutation();
+const AddTransactions = ({ opentransaction, setOpenTransaction, editData = null }) => {
+  const [addTransaction, { isLoading, error }] = useAddTransactionMutation();
+  const [updateTransaction] = useUpdateTransactionsMutation();
+  const { refetch } = useGetTransactionsQuery();
 
   const [form, setForm] = useState({
     date: "",
@@ -25,10 +32,25 @@ const AddTransactions = ({ opentransaction, setOpenTransaction }) => {
     description: "",
   });
 
-  // useEffect(() => {
-  //   setForm(form)
-  // }, [form])
-  
+  useEffect(() => {
+    if (editData) {
+      setForm({
+        date: editData.date || "",
+        amount: editData.amount || "",
+        category: editData.category || "",
+        type: editData.type || "Expense",
+        description: editData.description || "",
+      });
+    } else {
+      setForm({
+        date: "",
+        amount: "",
+        category: "",
+        type: "Expense",
+        description: "",
+      });
+    }
+  }, [editData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,14 +59,18 @@ const AddTransactions = ({ opentransaction, setOpenTransaction }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
-    setOpenTransaction(false);
 
     try {
-      const res = await AddTransactions(form).unwrap();
-      console.log(res);
+      if (editData) {
+        await updateTransaction({ id: editData._id, updateData: {...form} }).unwrap();
+      } else {
+        await addTransaction(form).unwrap();
+      }
+
+      refetch();
+      setOpenTransaction(false);
     } catch (error) {
-      console.log(error);
+      console.error("Error submitting transaction:", error);
     }
   };
 
@@ -63,14 +89,9 @@ const AddTransactions = ({ opentransaction, setOpenTransaction }) => {
       }}
     >
       <form onSubmit={handleSubmit}>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          px={1}
-        >
+        <Box display="flex" alignItems="center" justifyContent="space-between" px={1}>
           <DialogTitle sx={{ fontWeight: "bold", p: 0 }}>
-            Add Transaction
+            {editData ? "Edit Transaction" : "Add Transaction"}
           </DialogTitle>
           <IconButton onClick={() => setOpenTransaction(false)} size="small">
             <CloseIcon />
@@ -79,7 +100,9 @@ const AddTransactions = ({ opentransaction, setOpenTransaction }) => {
 
         <DialogContent>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Add a new transaction to your finance tracker.
+            {editData
+              ? "Update your transaction details below."
+              : "Add a new transaction to your finance tracker."}
           </Typography>
 
           <TextField
@@ -152,7 +175,6 @@ const AddTransactions = ({ opentransaction, setOpenTransaction }) => {
             type="submit"
             disabled={isLoading}
             variant="contained"
-            onClick={handleSubmit}
             sx={{
               backgroundColor: "#111",
               "&:hover": {
@@ -160,10 +182,10 @@ const AddTransactions = ({ opentransaction, setOpenTransaction }) => {
               },
             }}
           >
-            {isLoading ? "Save..." : "Save"}
+            {isLoading ? "Saving..." : editData ? "Update" : "Save"}
           </Button>
           {error && (
-            <Typography color="error">Failed to add transaction</Typography>
+            <Typography color="error">Failed to submit transaction</Typography>
           )}
         </DialogActions>
       </form>

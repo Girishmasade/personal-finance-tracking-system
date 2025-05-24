@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useGetTransactionsQuery } from "../Redux/app/transactionApiSlice";
+import Dashboard from "./Dashboard";
 
 const Transactions = () => {
   const [search, setSearch] = useState("");

@@ -18,7 +18,7 @@ export const addTransaction = async (req, res) => {
       amount,
     });
 
-    console.log(transaction);
+    // console.log(transaction);
 
     return res
       .status(200)
@@ -50,7 +50,7 @@ export const updateTransactions = async (req, res) => {
     
     const updateTrans = await Transaction.findByIdAndUpdate(id, updateData, {new: true})
 
-    // console.log(updateTrans);
+    console.log(updateTrans);
     
     return res.json(updateTrans)
 

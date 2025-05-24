@@ -13,7 +13,10 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import AddTransactions from "./AddTransactions";
-import { useDeleteTransactionsMutation } from "../Redux/app/transactionApiSlice";
+import {
+  useDeleteTransactionsMutation,
+  useGetTransactionsQuery,
+} from "../Redux/app/transactionApiSlice";
 
 const DataTable = ({ rows = [] }) => {
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -41,21 +44,26 @@ const DataTable = ({ rows = [] }) => {
     },
   }));
 
-  // const [isEdited, setIsEdited] = useState(false);
-  // const [opentransaction, setOpenTransaction] = useState(false);
+  const [deleteTransaction] = useDeleteTransactionsMutation();
+  const { refetch } = useGetTransactionsQuery();
 
-  const [deleteTransaction, refetch] = useDeleteTransactionsMutation()
-  
+  const [editData, setEditData] = useState(null);
+  const [opentransaction, setOpenTransaction] = useState(false);
+
   const handleDelete = async (id) => {
-      try {
-       await deleteTransaction(id).unwrap();
-       refetch()
-        console.log("Transaction deleted");
-      } catch (error) {
-        console.error("Delete failed:", error);
-      }
+    try {
+      await deleteTransaction(id).unwrap();
+      await refetch();
+      console.log("Transaction deleted");
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
   };
-  
+
+  const handleEdit = (row) => {
+    setEditData(row);
+    setOpenTransaction(true);
+  };
 
   return (
     <TableContainer component={Paper} style={{ maxHeight: 500 }}>
@@ -98,22 +106,18 @@ const DataTable = ({ rows = [] }) => {
                   align="right"
                   sx={{ display: "flex", gap: "12px" }}
                 >
-                  <IconButton 
-                  sx={{ color: "red" }}
-                  onClick={() => handleDelete(row._id)}
+                  <IconButton
+                    sx={{ color: "red" }}
+                    onClick={() => handleDelete(row._id)}
                   >
                     <DeleteOutlineOutlinedIcon />
                   </IconButton>
 
                   <IconButton
-                   sx={{ color: "green" }}
-                   onClick={() => {
-                    setIsEdited(row)
-                    setOpenTransaction(true)}}
-                   >
-                    <BorderColorOutlinedIcon
-                     
-                    />
+                    sx={{ color: "green" }}
+                    onClick={() => handleEdit(row)}
+                  >
+                    <BorderColorOutlinedIcon />
                   </IconButton>
                 </StyledTableCell>
               </StyledTableRow>
@@ -127,12 +131,15 @@ const DataTable = ({ rows = [] }) => {
           )}
         </TableBody>
       </Table>
-      {/* <AddTransactions
+
+      <AddTransactions
         opentransaction={opentransaction}
-        setOpenTransaction={setOpenTransaction}
-        // isEdited={isEdited}
-        // setIsEdited={setIsEdited}
-      /> */}
+        setOpenTransaction={(value) => {
+          setOpenTransaction(value);
+          if (!value) setEditData(null); // Reset editData when modal closes
+        }}
+        editData={editData}
+      />
     </TableContainer>
   );
 };
