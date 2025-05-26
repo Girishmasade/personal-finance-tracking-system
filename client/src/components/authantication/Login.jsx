@@ -19,9 +19,8 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "../../Redux/api/authSlice";
 
 const LoginPage = () => {
-
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [login, { isLoading, error }] = useLoginMutation();
   const [form, setForm] = useState({
     email: "",
@@ -43,7 +42,9 @@ const LoginPage = () => {
         password: form.password,
       }).unwrap();
       // console.log(userData);
-      dispatch(setCredentials(userData))
+      // After login API success
+      dispatch(setCredentials({ user: userData.user, token: userData.token }));
+
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);

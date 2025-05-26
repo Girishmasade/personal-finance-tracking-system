@@ -38,7 +38,6 @@ const AppLayout = () => {
   const {user} = useSelector((state) => state.auth)
   // console.log(user);
   
-
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [opentransaction, setOpenTransaction] = useState(false)
@@ -108,8 +107,10 @@ const AppLayout = () => {
                   bgcolor: "#000",
                   color: "white",
                 }}
+                component={Link}
+                to="/profile"
               >
-                {user?.username.charAt(0)}
+                {user?.username[0].toUpperCase()}
               </Box>
             </IconButton>
           </Box>
@@ -222,7 +223,7 @@ const AppLayout = () => {
         </Box>
       </Drawer>
 
-      {/* Main Content */}
+   
       <Box
         component="main"
         sx={{

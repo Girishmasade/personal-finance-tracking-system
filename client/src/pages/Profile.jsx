@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Person, Security, Download } from "@mui/icons-material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Text from "../components/Text";
 import { useUpdateUserMutation } from "../Redux/app/authApiSlice";
 import { useSelector } from "react-redux";
@@ -32,10 +32,15 @@ const Profile = () => {
     email: "",
     address: "",
     phone: "",
-    newPassword: "",
   });
-  const [updateUser, { isLoading, error, refetch }] = useUpdateUserMutation();
- 
+  const [updateUser, { isLoading, error}] = useUpdateUserMutation();
+  const { user } = useSelector((state) => state.auth);
+  console.log("user", user);
+
+
+  if (form.newPassword && form.newPassword === form.confirmNewPassword) {
+    form.password = form.newPassword;
+  }
 
   const handleChange = (index) => {
     setTab(index);
@@ -46,18 +51,26 @@ const Profile = () => {
     setForm({ ...form, [name]: value });
   };
 
+  useEffect(() => {
+   if (user) {
+    setForm((prev) =>({
+      ...prev,
+      username: user.username || "",
+      firstname: user.firstname || "",
+      lastname: user.lastname || "",
+      email: user.email || "",
+      address: user.address || "",
+      phone: user.phone || ""
+    }))
+   }
+  }, [])
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await updateUser({
-        id: _id,
-        username: form.username,
-        firstname: form.firstname,
-        lastname: form.lastname,
-        email: form.email,
-        address: form.address,
-        phone: form.phone,
-        newPassword: form.newPassword,
+        id: user.id,
+        ...form,      
       }).unwrap();
       console.log(res);
     } catch (error) {
@@ -124,7 +137,7 @@ const Profile = () => {
                 placeholder="Enter your first name"
                 value={form.firstname}
                 onChange={handleInputChange}
-                autoComplete="given-name"
+                autoComplete="firstname"
                 autoFocus
               />
             </div>
@@ -138,7 +151,7 @@ const Profile = () => {
                 placeholder="Enter your last name"
                 value={form.lastname}
                 onChange={handleInputChange}
-                autoComplete="family-name"
+                autoComplete="lastname"
                 autoFocus
               />
             </div>
@@ -195,18 +208,32 @@ const Profile = () => {
           <TextField
             label="Current Password"
             type="password"
+            value={form.currentPassword}
+            onChange={handleInputChange}
+            name="currentPassword"
+            autoComplete="current-password"
             fullWidth
             sx={{ mb: 2 }}
           />
           <TextField
             label="New Password"
             type="password"
+            name="newPassword"
+            value={form.newPassword}
+            onChange={handleInputChange}
+            autoComplete="new-password"
+            placeholder="Enter new password"
             fullWidth
             sx={{ mb: 2 }}
           />
           <TextField
             label="Confirm New Password"
             type="password"
+            name="confirmNewPassword"
+            value={form.confirmNewPassword}
+            onChange={handleInputChange}
+            autoComplete="new-password"
+            placeholder="Confirm new password"
             fullWidth
             sx={{ mb: 2 }}
           />
