@@ -1,16 +1,14 @@
-import React from 'react'
-import Text from '../components/Text'
-import DataCharts from '../components/Charts/DataCharts'
-
+import React from "react";
+import Text from "../components/Text";
+import DataCharts from "../components/Charts/DataCharts";
 
 const Charts = () => {
   return (
-  <div>
-    <Text title={'Charts'} subTitle={'See your all Charts'}/>
+    <div>
+      <Text title={"Charts"} subTitle={"See your all Charts"} />
+      <DataCharts />
+    </div>
+  );
+};
 
-    <DataCharts/>
-  </div>
-  )
-}
-
-export default Charts
+export default Charts;

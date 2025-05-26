@@ -96,7 +96,7 @@ const AppLayout = () => {
               sx={{ backgroundColor: "#000" }}
               onClick={() => setOpenTransaction(true)}
             >
-              + Add Transaction
+              Add Transaction
             </Button>
             <IconButton>
               <Box

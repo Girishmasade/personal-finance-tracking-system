@@ -14,12 +14,15 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import {
   useAddTransactionMutation,
-  
   useGetTransactionsQuery,
   useUpdateTransactionsMutation,
 } from "../Redux/app/transactionApiSlice";
 
-const AddTransactions = ({ opentransaction, setOpenTransaction, editData = null }) => {
+const AddTransactions = ({
+  opentransaction,
+  setOpenTransaction,
+  editData = null,
+}) => {
   const [addTransaction, { isLoading, error }] = useAddTransactionMutation();
   const [updateTransaction] = useUpdateTransactionsMutation();
   const { refetch } = useGetTransactionsQuery();
@@ -62,7 +65,10 @@ const AddTransactions = ({ opentransaction, setOpenTransaction, editData = null 
 
     try {
       if (editData) {
-        await updateTransaction({ id: editData._id, updateData: {...form} }).unwrap();
+        await updateTransaction({
+          id: editData._id,
+          updateData: { ...form },
+        }).unwrap();
       } else {
         await addTransaction(form).unwrap();
       }
@@ -89,7 +95,12 @@ const AddTransactions = ({ opentransaction, setOpenTransaction, editData = null 
       }}
     >
       <form onSubmit={handleSubmit}>
-        <Box display="flex" alignItems="center" justifyContent="space-between" px={1}>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          px={1}
+        >
           <DialogTitle sx={{ fontWeight: "bold", p: 0 }}>
             {editData ? "Edit Transaction" : "Add Transaction"}
           </DialogTitle>

@@ -50,7 +50,7 @@ export const updateTransactions = async (req, res) => {
     
     const updateTrans = await Transaction.findByIdAndUpdate(id, updateData, {new: true})
 
-    console.log(updateTrans);
+    // console.log(updateTrans);
     
     return res.json(updateTrans)
 
@@ -64,14 +64,14 @@ export const deleteTransaction = async (req, res) => {
   try {
     const {id} = req.params
 
-    console.log(req.params);
+    // console.log(req.params);
 
     if (!id) {
       return res.status(400).json({ message: 'Transaction ID is required' });
     }
     
     const trashed = await Transaction.findByIdAndDelete(id);
-    console.log(trashed);
+    // console.log(trashed);
     
 
     if (!trashed) {
