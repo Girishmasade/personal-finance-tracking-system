@@ -118,7 +118,7 @@ export const updateProfile = async (req, res) => {
   const {id} = req.params
   try {
     const {username, email, firstname, lastname, address, phone, newPassword} = req.body
-    const user = await User.findById(id)
+    const user = await User.findById({_id: id})
 
     // console.log(user);
     

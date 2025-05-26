@@ -16,15 +16,3 @@ export const apiSlice = createApi({
     endpoints: (builder) => ({})
  
 })
-
-// export const {useRegisterUserMutation} = apiSlice
-
-//    endpoints: (builder) => ({
-//     registerUser: builder.mutation({
-//         query: (userData) => ({
-//             url: '/user/register',
-//             method: 'POST',
-//             body: userData
-//         })
-//     })
-// })

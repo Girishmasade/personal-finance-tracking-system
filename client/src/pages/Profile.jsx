@@ -14,6 +14,8 @@ import {
 import { Person, Security, Download } from "@mui/icons-material";
 import React, { useState } from "react";
 import Text from "../components/Text";
+import { useUpdateUserMutation } from "../Redux/app/authApiSlice";
+import { useSelector } from "react-redux";
 
 const tabItems = [
   { icon: <Person />, label: "Profile" },
@@ -23,9 +25,44 @@ const tabItems = [
 
 const Profile = () => {
   const [tab, setTab] = useState(0);
+  const [form, setForm] = useState({
+    username: "",
+    firstname: "",
+    lastname: "",
+    email: "",
+    address: "",
+    phone: "",
+    newPassword: "",
+  });
+  const [updateUser, { isLoading, error, refetch }] = useUpdateUserMutation();
+ 
 
   const handleChange = (index) => {
     setTab(index);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await updateUser({
+        id: _id,
+        username: form.username,
+        firstname: form.firstname,
+        lastname: form.lastname,
+        email: form.email,
+        address: form.address,
+        phone: form.phone,
+        newPassword: form.newPassword,
+      }).unwrap();
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -60,25 +97,91 @@ const Profile = () => {
             subTitle={"Enter your details update here"}
           />
 
-          <form className="flex flex-wrap flex-col pt-7 gap-4 w-full">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-wrap flex-col pt-7 gap-4 w-full"
+          >
+            <div>
+              <InputLabel> Username </InputLabel>
+              <TextField
+                fullWidth
+                name="username"
+                type="text"
+                placeholder="Enter your username"
+                value={form.username}
+                onChange={handleInputChange}
+                autoComplete="username"
+                autoFocus
+              />
+            </div>
+
             <div>
               <InputLabel> First Name </InputLabel>
-              <TextField fullWidth />
+              <TextField
+                fullWidth
+                name="firstname"
+                type="text"
+                placeholder="Enter your first name"
+                value={form.firstname}
+                onChange={handleInputChange}
+                autoComplete="given-name"
+                autoFocus
+              />
             </div>
 
             <div>
               <InputLabel> Last Name </InputLabel>
-              <TextField fullWidth />
+              <TextField
+                fullWidth
+                name="lastname"
+                type="text"
+                placeholder="Enter your last name"
+                value={form.lastname}
+                onChange={handleInputChange}
+                autoComplete="family-name"
+                autoFocus
+              />
             </div>
 
             <div>
               <InputLabel> Email </InputLabel>
-              <TextField fullWidth />
+              <TextField
+                fullWidth
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                value={form.email}
+                onChange={handleInputChange}
+                autoComplete="email"
+                autoFocus
+              />
             </div>
 
             <div>
               <InputLabel> Address </InputLabel>
-              <TextField fullWidth />
+              <TextField
+                fullWidth
+                name="address"
+                type="text"
+                placeholder="Enter your address"
+                value={form.address}
+                onChange={handleInputChange}
+                autoComplete="address"
+                autoFocus
+              />
+            </div>
+            <div>
+              <InputLabel> Phone no. </InputLabel>
+              <TextField
+                fullWidth
+                name="phone"
+                type="tel"
+                placeholder="Enter your phone number"
+                value={form.phone}
+                onChange={handleInputChange}
+                autoComplete="tel"
+                autoFocus
+              />
             </div>
           </form>
         </Box>
@@ -111,26 +214,41 @@ const Profile = () => {
       )}
 
       {tab === 2 && (
-          <Box>
-          <Typography variant="h6" mb={2}>Export Your Data</Typography>
-          <Typography variant="body1" mb={2}>
-            Download a copy of your personal data including your profile, payment history, and activity logs.
+        <Box>
+          <Typography variant="h6" mb={2}>
+            Export Your Data
           </Typography>
-          <Button variant="contained" color="primary">Export Data</Button>
+          <Typography variant="body1" mb={2}>
+            Download a copy of your personal data including your profile,
+            payment history, and activity logs.
+          </Typography>
+          <Button variant="contained" color="primary">
+            Export Data
+          </Button>
         </Box>
       )}
 
-      <Box
-        sx={{
-          display: "flex",
-          gap: "4px",
-          justifyContent: "end",
-          paddingTop: "4px",
-        }}
-      >
-        <Button variant="outlined">Cancel</Button>
-        <Button variant="contained">Update</Button>
-      </Box>
+      {tab !== 2 && (
+        <Box
+          sx={{
+            display: "flex",
+            gap: "4px",
+            justifyContent: "end",
+            paddingTop: "4px",
+          }}
+        >
+          <Button variant="outlined">Cancel</Button>
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={isLoading}
+            color="primary"
+            variant="contained"
+          >
+            Update
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

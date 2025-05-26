@@ -7,6 +7,6 @@ const authRoute = Router()
 authRoute.post('/register', register)
 authRoute.post('/login', login)
 authRoute.post('/forget-password', protectRoute, forgetPass)
-authRoute.post('/update-profile/:id', protectRoute, updateProfile)
+authRoute.put('/update-profile/:id', protectRoute, updateProfile)
 
 export default authRoute

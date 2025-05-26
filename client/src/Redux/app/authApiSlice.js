@@ -20,8 +20,17 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 body: data,
                 credentials: 'include'
             })
-        })
+        }),
+
+
+        updateUser: builder.mutation({
+            query: ({id, ...body}) => ({  //...data to get the rest of the body from backend
+                url: `${AUTH_URL}/update-profile/${id}`,
+                method: 'PUT',
+                body,
+            })
+        }),
     })
 })
 
-export const {useLoginMutation, useRegisterUserMutation} = authApiSlice
+export const {useLoginMutation, useRegisterUserMutation, useUpdateUserMutation} = authApiSlice
