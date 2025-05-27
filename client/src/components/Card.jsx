@@ -11,18 +11,18 @@ import ArrowCircleUpRoundedIcon from "@mui/icons-material/ArrowCircleUpRounded";
 import ArrowCircleDownRoundedIcon from "@mui/icons-material/ArrowCircleDownRounded";
 import SavingsRoundedIcon from "@mui/icons-material/SavingsRounded";
 
-function SelectActionCard({transactions}) {
+function SelectActionCard({ transactions }) {
   const [selectedCard, setSelectedCard] = React.useState(0);
 
   const totalIncome = transactions
-  .filter((txn) => txn.type === "Income")
-  .reduce((acc, txn) => acc + Number(txn.amount), 0);
+    .filter((txn) => txn.type === "Income")
+    .reduce((acc, txn) => acc + Number(txn.amount), 0);
 
   const totalExpense = transactions
-  .filter((txn) => txn.type === 'Expense')
-  .reduce((acc, txn) => acc + Number(txn.amount), 0)
+    .filter((txn) => txn.type === "Expense")
+    .reduce((acc, txn) => acc + Number(txn.amount), 0);
 
-  const totalBanace = totalIncome - totalExpense
+  const totalBanace = totalIncome - totalExpense;
 
   const cards = [
     {
@@ -89,14 +89,17 @@ function SelectActionCard({transactions}) {
                   )}
                 </CardContent>
 
-                <IconButton
+                <Box
                   sx={{
                     color: isPositive ? "#4ade80" : "#ef4444",
                     fontSize: 40,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
                   <Icon fontSize="inherit" />
-                </IconButton>
+                </Box>
               </Box>
             </CardActionArea>
           </Card>
