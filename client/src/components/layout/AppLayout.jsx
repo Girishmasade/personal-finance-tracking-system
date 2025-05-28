@@ -50,7 +50,7 @@ const AppLayout = ({ mode, setMode }) => {
   };
 
   const navItems = [
-    { text: "Dashboard", icon: <GridViewIcon />, path: "/" },
+    { text: "Dashboard", icon: <GridViewIcon />, path: "/dashboard" },
     { text: "Transactions", icon: <SyncAltIcon />, path: "/transactions" },
     { text: "Charts", icon: <PieChartIcon />, path: "/charts" },
     { text: "Profile", icon: <PersonIcon />, path: "/profile" },

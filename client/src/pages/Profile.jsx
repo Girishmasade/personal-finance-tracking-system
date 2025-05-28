@@ -2,11 +2,14 @@ import {
   Box,
   Button,
   Divider,
+  FormControl,
+  FormLabel,
   InputLabel,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
+  OutlinedInput,
   Paper,
   TextField,
   Typography,
@@ -114,9 +117,9 @@ const Profile = () => {
             onSubmit={handleSubmit}
             className="flex flex-wrap flex-col pt-7 gap-4 w-full"
           >
-            <div>
-              <InputLabel> Username </InputLabel>
-              <TextField
+            <FormControl>
+              <FormLabel> Username </FormLabel>
+              <OutlinedInput
                 fullWidth
                 name="username"
                 type="text"
@@ -126,7 +129,7 @@ const Profile = () => {
                 autoComplete="username"
                 autoFocus
               />
-            </div>
+            </FormControl>
 
             <div>
               <InputLabel> First Name </InputLabel>
