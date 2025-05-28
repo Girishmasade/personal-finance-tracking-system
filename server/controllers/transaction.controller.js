@@ -1,4 +1,7 @@
 import Transaction from "../models/transaction.model.js";
+import path from "path";
+import fs from 'fs'
+import xlsx from 'xlsx'
 
 export const addTransaction = async (req, res) => {
   try {
@@ -86,5 +89,41 @@ export const deleteTransaction = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(400).json({ status: false, message: error.message });
+  }
+}
+
+export const uploadExcelTransaction = async (req, res) => {
+  try {
+   
+    if (!req.file) {
+      return res.status(400).json({success: false, message: "No file uploaded"})
+    }
+
+    const filePath = path.resolve(req.file.path)
+    const workbook = xlsx.readFile(filePath)
+    const sheetName = workbook.SheetNames[0]
+    const sheet = workbook.Sheets[sheetName]
+
+    const rows = xlsx.utils.sheet_to_json(sheet)
+    console.log(rows);
+    
+
+    const transactions = rows.map((row) => ({
+      date: new Date(row.date),
+      amount: Number (row.amount),
+      category: row.category,
+      description: row.description,
+      type: row.type
+    }))
+
+    console.log(transactions)
+
+    await Transaction.insertMany(transactions)
+
+    return res.status(200).json({success: true, message: `${transactions.length} transactions imported`})
+
+  } catch (error) {
+    console.error('Import failed:', error);
+    return res.status(500).json({ success: false, message: error.message });
   }
 }
