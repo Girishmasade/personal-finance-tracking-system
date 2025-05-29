@@ -109,7 +109,7 @@ export const uploadExcelTransaction = async (req, res) => {
     
 
     const transactions = rows.map((row) => ({
-      date: new Date(row.date),
+      date: new Date(row.date).toLocaleDateString("en-CA"),
       amount: Number (row.amount),
       category: row.category,
       description: row.description,

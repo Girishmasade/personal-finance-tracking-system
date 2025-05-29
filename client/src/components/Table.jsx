@@ -82,7 +82,7 @@ const DataTable = ({ rows = [] }) => {
           {rows.length > 0 ? (
             rows.map((row, index) => (
               <StyledTableRow key={index}>
-                <StyledTableCell>{row.date}</StyledTableCell>
+                <StyledTableCell>{new Date(row.date).toLocaleDateString("en-CA")}</StyledTableCell>
                 <StyledTableCell>{row.category}</StyledTableCell>
                 <StyledTableCell>{row.description}</StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: "600" }}>

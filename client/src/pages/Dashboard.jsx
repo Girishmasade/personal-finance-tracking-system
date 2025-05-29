@@ -17,8 +17,8 @@ const Dashboard = () => {
       <div className="pt-10">
       <Text title={"Recent Transactions"} />
 
-        <Box sx={{overflowX: 'auto', overflowY: 'hidden'}}>
-        <Table rows={transactions}/>
+        <Box>
+        <Table rows={transactions.slice(0, 5)}/>
         </Box>
         
       </div>
