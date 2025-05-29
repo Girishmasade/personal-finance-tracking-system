@@ -28,13 +28,14 @@ import {
 import GridViewIcon from "@mui/icons-material/GridView";
 import SyncAltIcon from "@mui/icons-material/SyncAlt";
 import PieChartIcon from "@mui/icons-material/PieChart";
-import SettingsIcon from "@mui/icons-material/Settings";
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import LogoutIcon from "@mui/icons-material/Logout";
 
 import { Link, Outlet, useLocation } from "react-router-dom";
 import AddTransactions from "../AddTransactions";
 import { useSelector } from "react-redux";
 import { logout } from "../../Redux/api/authSlice";
+import UploadTransaction from "../UploadTransaction";
 
 const drawerWidth = 240;
 
@@ -43,6 +44,7 @@ const AppLayout = ({ mode, setMode }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [opentransaction, setOpenTransaction] = useState(false);
+  const [openUploadFile, setOpenUploadFile] = useState(false);
   const location = useLocation();
 
   const handleDrawerToggle = () => {
@@ -119,6 +121,27 @@ const AppLayout = ({ mode, setMode }) => {
             >
               Add Transaction
             </Button>
+              /
+            <IconButton
+              variant="contained"
+              size="small"
+              sx={{
+                backgroundColor:
+                  theme.palette.mode === "dark"
+                    ? theme.palette.primary.light
+                    : "#000",
+                color: theme.palette.mode === "dark" ? "#000" : "#fff",
+                "&:hover": {
+                  backgroundColor:
+                    theme.palette.mode === "dark"
+                      ? theme.palette.primary.main
+                      : "#333",
+                },
+              }}
+              onClick={() => setOpenUploadFile(true)}
+            >
+              <FileUploadIcon/>
+            </IconButton>
 
             <IconButton component={Link} to="/profile">
               <Box
@@ -226,6 +249,10 @@ const AppLayout = ({ mode, setMode }) => {
       <AddTransactions
         opentransaction={opentransaction}
         setOpenTransaction={setOpenTransaction}
+      />
+      <UploadTransaction
+      openUploadFile={openUploadFile}
+      setOpenUploadFile={setOpenTransaction}
       />
     </Box>
   );
