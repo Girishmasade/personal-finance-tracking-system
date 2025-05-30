@@ -34,7 +34,7 @@ export const addTransaction = async (req, res) => {
 
 export const getTransaction = async (req, res) => {
   try {
-    const transaction = await Transaction.find()
+    const transaction = await Transaction.find().sort({CreatedAt: 1})
     if (!transaction) {
       return res.status(400).json({message: "error to get transaction"})
     }
@@ -94,7 +94,8 @@ export const deleteTransaction = async (req, res) => {
 
 export const uploadExcelTransaction = async (req, res) => {
   try {
-   
+    // console.log(req.file);
+    
     if (!req.file) {
       return res.status(400).json({success: false, message: "No file uploaded"})
     }
@@ -105,9 +106,8 @@ export const uploadExcelTransaction = async (req, res) => {
     const sheet = workbook.Sheets[sheetName]
 
     const rows = xlsx.utils.sheet_to_json(sheet)
-    console.log(rows);
+    // console.log(rows);
     
-
     const transactions = rows.map((row) => ({
       date: new Date(row.date).toLocaleDateString("en-CA"),
       amount: Number (row.amount),
@@ -116,7 +116,7 @@ export const uploadExcelTransaction = async (req, res) => {
       type: row.type
     }))
 
-    console.log(transactions)
+    // console.log(transactions)
 
     await Transaction.insertMany(transactions)
 

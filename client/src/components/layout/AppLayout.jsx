@@ -252,7 +252,7 @@ const AppLayout = ({ mode, setMode }) => {
       />
       <UploadTransaction
       openUploadFile={openUploadFile}
-      setOpenUploadFile={setOpenTransaction}
+      setOpenUploadFile={setOpenUploadFile}
       />
     </Box>
   );
