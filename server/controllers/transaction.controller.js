@@ -1,7 +1,7 @@
 import Transaction from "../models/transaction.model.js";
 import path from "path";
-import fs from 'fs'
-import xlsx from 'xlsx'
+import fs from "fs";
+import xlsx from "xlsx";
 
 export const addTransaction = async (req, res) => {
   try {
@@ -25,7 +25,7 @@ export const addTransaction = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Transaction added", transaction});
+      .json({ success: true, message: "Transaction added", transaction });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -34,96 +34,119 @@ export const addTransaction = async (req, res) => {
 
 export const getTransaction = async (req, res) => {
   try {
-    const transaction = await Transaction.find().sort({CreatedAt: 1})
+    const transaction = await Transaction.find().sort({ CreatedAt: 1 });
     if (!transaction) {
-      return res.status(400).json({message: "error to get transaction"})
+      return res.status(400).json({ message: "error to get transaction" });
     }
 
-    return res.status(200).json({success: true, transaction})
+    return res.status(200).json({ success: true, transaction });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({success: false, message: error.message})
+    return res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
 export const updateTransactions = async (req, res) => {
   try {
-    const {id} = req.params
-    const {updateData} = req.body
-    
-    const updateTrans = await Transaction.findByIdAndUpdate(id, updateData, {new: true})
+    const { id } = req.params;
+    const { updateData } = req.body;
+
+    const updateTrans = await Transaction.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
 
     // console.log(updateTrans);
-    
-    return res.json(updateTrans)
 
+    return res.json(updateTrans);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({success: false, message: error.message})
+    return res.status(500).json({ success: false, message: error.message });
   }
-}
+};
 
 export const deleteTransaction = async (req, res) => {
   try {
-    const {id} = req.params
+    const { id } = req.params;
 
     // console.log(req.params);
 
     if (!id) {
-      return res.status(400).json({ message: 'Transaction ID is required' });
+      return res.status(400).json({ message: "Transaction ID is required" });
     }
-    
+
     const trashed = await Transaction.findByIdAndDelete(id);
     // console.log(trashed);
-    
 
     if (!trashed) {
-      return res.status(404).json({ status: false, message: "Transaction not found" });
+      return res
+        .status(404)
+        .json({ status: false, message: "Transaction not found" });
     }
 
     res.status(200).json({
       status: true,
       message: `Transaction Deleted successfully.`,
     });
-
   } catch (error) {
     console.log(error);
     return res.status(400).json({ status: false, message: error.message });
   }
-}
+};
 
 export const uploadExcelTransaction = async (req, res) => {
   try {
     // console.log(req.file);
-    
+
     if (!req.file) {
-      return res.status(400).json({success: false, message: "No file uploaded"})
+      return res
+        .status(400)
+        .json({ success: false, message: "No file uploaded" });
     }
 
-    const filePath = path.resolve(req.file.path)
-    const workbook = xlsx.readFile(filePath)
-    const sheetName = workbook.SheetNames[0]
-    const sheet = workbook.Sheets[sheetName]
+    const filePath = path.resolve(req.file.path);
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
 
-    const rows = xlsx.utils.sheet_to_json(sheet)
+    const rows = xlsx.utils.sheet_to_json(sheet);
     // console.log(rows);
-    
+
+    const Dates = rows.map((row) =>
+      new Date(row.date).toLocaleDateString("en-CA")
+    );
+
+    const checkDates = await Transaction.find({ date: { $in: Dates } }); //it's check in database in the
+    console.log(checkDates);
+
+    if (checkDates.length !== 0) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: `Transaction for ${checkDates
+            .map((row) => row.date)
+            .join(",")} This Date already exists!`,
+        });
+    }
+
     const transactions = rows.map((row) => ({
       date: new Date(row.date).toLocaleDateString("en-CA"),
-      amount: Number (row.amount),
+      amount: Number(row.amount),
       category: row.category,
       description: row.description,
-      type: row.type
-    }))
+      type: row.type,
+    }));
 
     // console.log(transactions)
 
-    await Transaction.insertMany(transactions)
+    await Transaction.insertMany(transactions);
 
-    return res.status(200).json({success: true, message: `${transactions.length} transactions imported`})
-
+    return res.status(200).json({
+      success: true,
+      message: `${transactions.length} transactions imported`,
+    });
   } catch (error) {
-    console.error('Import failed:', error);
+    console.error("Import failed:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
-}
+};
