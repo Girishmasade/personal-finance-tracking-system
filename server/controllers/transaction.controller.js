@@ -34,7 +34,7 @@ export const addTransaction = async (req, res) => {
 
 export const getTransaction = async (req, res) => {
   try {
-    const transaction = await Transaction.find().sort({ CreatedAt: 1 });
+    const transaction = await Transaction.find().sort({ date: -1 }).lean().exec()
     if (!transaction) {
       return res.status(400).json({ message: "error to get transaction" });
     }
