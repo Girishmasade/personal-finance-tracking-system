@@ -115,18 +115,16 @@ export const uploadExcelTransaction = async (req, res) => {
       new Date(row.date).toLocaleDateString("en-CA")
     );
 
-    const checkDates = await Transaction.find({ date: { $in: Dates } }); //it's check in database in the
+    const checkDates = await Transaction.find({ date: { $in: Dates } }); //it's check in database the date avilable or not
     console.log(checkDates);
 
     if (checkDates.length !== 0) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: `Transaction for ${checkDates
-            .map((row) => row.date)
-            .join(",")} This Date already exists!`,
-        });
+      return res.status(400).json({
+        success: false,
+        message: `Transaction for ${checkDates
+          .map((row) => row.date)
+          .join(",")} This Date already exists!`,
+      });
     }
 
     const transactions = rows.map((row) => ({
