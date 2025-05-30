@@ -1,6 +1,5 @@
 import Transaction from "../models/transaction.model.js";
 import path from "path";
-import fs from "fs";
 import xlsx from "xlsx";
 
 export const addTransaction = async (req, res) => {
@@ -34,7 +33,7 @@ export const addTransaction = async (req, res) => {
 
 export const getTransaction = async (req, res) => {
   try {
-    const transaction = await Transaction.find().sort({ date: -1 }).lean().exec()
+    const transaction = await Transaction.find().sort({ date: -1 })
     if (!transaction) {
       return res.status(400).json({ message: "error to get transaction" });
     }
