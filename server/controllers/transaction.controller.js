@@ -115,7 +115,7 @@ export const uploadExcelTransaction = async (req, res) => {
       new Date(row.date).toLocaleDateString("en-CA")
     );
 
-    const checkDates = await Transaction.find({ date: { $in: Dates } }); //it's check in database the date avilable or not
+    const checkDates = await Transaction.find({ date: { $in: Dates } }) //it's check in database the date avilable or not
     console.log(checkDates);
 
     if (checkDates.length !== 0) {
