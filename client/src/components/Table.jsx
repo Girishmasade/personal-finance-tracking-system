@@ -17,6 +17,7 @@ import {
   useDeleteTransactionsMutation,
   useGetTransactionsQuery,
 } from "../Redux/app/transactionApiSlice";
+import Swal from "sweetalert2";
 
 const DataTable = ({ rows = [] }) => {
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -52,11 +53,34 @@ const DataTable = ({ rows = [] }) => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteTransaction(id).unwrap();
-      await refetch();
-      console.log("Transaction deleted");
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+      console.log(result);
+      
+      if (result.isConfirmed) {
+        await deleteTransaction(id).unwrap();
+        await refetch();
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+        });
+      }
+      // console.log("Transaction deleted");
     } catch (error) {
       console.error("Delete failed:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to delete the transaction.",
+        icon: "error",
+      });
     }
   };
 
@@ -82,7 +106,9 @@ const DataTable = ({ rows = [] }) => {
           {rows.length > 0 ? (
             rows.map((row, index) => (
               <StyledTableRow key={index}>
-                <StyledTableCell>{new Date(row.date).toLocaleDateString("en-CA")}</StyledTableCell>
+                <StyledTableCell>
+                  {new Date(row.date).toLocaleDateString("en-CA")}
+                </StyledTableCell>
                 <StyledTableCell>{row.category}</StyledTableCell>
                 <StyledTableCell>{row.description}</StyledTableCell>
                 <StyledTableCell sx={{ fontWeight: "600" }}>

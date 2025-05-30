@@ -13,10 +13,10 @@ import {
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CloseIcon from "@mui/icons-material/Close";
 import { useUploadTransacationFileMutation } from "../Redux/app/transactionApiSlice";
+import Swal from "sweetalert2";
 
 const UploadTransaction = ({ openUploadFile, setOpenUploadFile }) => {
   const [file, setFile] = useState(null);
-
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -25,18 +25,32 @@ const UploadTransaction = ({ openUploadFile, setOpenUploadFile }) => {
   const [uploadTransacationFile, { isLoading, error }] =
     useUploadTransacationFileMutation();
   const handleUpload = async () => {
-
     try {
-      console.log(file);
-      
+      // console.log(file);
+
       const formData = new FormData();
       formData.append("file", file);
 
       const res = await uploadTransacationFile(formData).unwrap();
       console.log("Uploading file:", res);
+      if (res.ok) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Transaction Uploaded Successfully",
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
       setOpenUploadFile(false);
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+      });
+      setOpenUploadFile(false);
     }
   };
 

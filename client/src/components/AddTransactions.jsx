@@ -12,6 +12,7 @@ import {
   Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Swal from 'sweetalert2'
 import {
   useAddTransactionMutation,
   useGetTransactionsQuery,
@@ -65,18 +66,40 @@ const AddTransactions = ({
 
     try {
       if (editData) {
-        await updateTransaction({
+       const updateTrans = await updateTransaction({
           id: editData._id,
           updateData: { ...form },
         }).unwrap();
+        // console.log(updateTrans);
+        
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Data Updated Successfully",
+          showConfirmButton: false,
+          timer: 1500
+        });
       } else {
         await addTransaction(form).unwrap();
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Transaction Added Successfully",
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
 
       refetch();
       setOpenTransaction(false);
     } catch (error) {
       console.error("Error submitting transaction:", error);
+      Swal.fire({
+        title: 'Error!',
+        text: error.message,
+        icon: 'error',
+        confirmButtonText: 'Cool'
+      })
     }
   };
 

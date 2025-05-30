@@ -4,18 +4,17 @@ import {
   Divider,
   FormControl,
   FormLabel,
-  InputLabel,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   OutlinedInput,
   Paper,
-  TextField,
   Typography,
 } from "@mui/material";
 import { Person, Security, Download } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import Text from "../components/Text";
 import { useUpdateUserMutation } from "../Redux/app/authApiSlice";
 import { useSelector } from "react-redux";
@@ -36,10 +35,9 @@ const Profile = () => {
     address: "",
     phone: "",
   });
-  const [updateUser, { isLoading, error}] = useUpdateUserMutation();
+  const [updateUser, { isLoading, error }] = useUpdateUserMutation();
   const { user } = useSelector((state) => state.auth);
   // console.log("user", user);
-
 
   if (form.newPassword && form.newPassword === form.confirmNewPassword) {
     form.password = form.newPassword;
@@ -55,29 +53,43 @@ const Profile = () => {
   };
 
   useEffect(() => {
-   if (user) {
-    setForm((prev) =>({
-      ...prev,
-      username: user.username || "",
-      firstname: user.firstname || "",
-      lastname: user.lastname || "",
-      email: user.email || "",
-      address: user.address || "",
-      phone: user.phone || ""
-    }))
-   }
-  }, [])
-  
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        username: user.username || "",
+        firstname: user.firstname || "",
+        lastname: user.lastname || "",
+        email: user.email || "",
+        address: user.address || "",
+        phone: user.phone || "",
+      }));
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await updateUser({
         id: user.id,
-        ...form,      
+        ...form,
       }).unwrap();
-      console.log(res);
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Profile Updated Successfully",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      // console.log(res);
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: error?.data?.message || "Failed to update profile",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
 
@@ -131,9 +143,9 @@ const Profile = () => {
               />
             </FormControl>
 
-            <div>
-              <InputLabel> First Name </InputLabel>
-              <TextField
+            <FormControl>
+              <FormLabel> First Name </FormLabel>
+              <OutlinedInput
                 fullWidth
                 name="firstname"
                 type="text"
@@ -143,11 +155,11 @@ const Profile = () => {
                 autoComplete="firstname"
                 autoFocus
               />
-            </div>
+            </FormControl>
 
-            <div>
-              <InputLabel> Last Name </InputLabel>
-              <TextField
+            <FormControl>
+              <FormLabel> Last Name </FormLabel>
+              <OutlinedInput
                 fullWidth
                 name="lastname"
                 type="text"
@@ -157,11 +169,11 @@ const Profile = () => {
                 autoComplete="lastname"
                 autoFocus
               />
-            </div>
+            </FormControl>
 
-            <div>
-              <InputLabel> Email </InputLabel>
-              <TextField
+            <FormControl>
+              <FormLabel> Email </FormLabel>
+              <OutlinedInput
                 fullWidth
                 name="email"
                 type="email"
@@ -171,11 +183,11 @@ const Profile = () => {
                 autoComplete="email"
                 autoFocus
               />
-            </div>
+            </FormControl>
 
-            <div>
-              <InputLabel> Address </InputLabel>
-              <TextField
+            <FormControl>
+              <FormLabel> Address </FormLabel>
+              <OutlinedInput
                 fullWidth
                 name="address"
                 type="text"
@@ -185,10 +197,10 @@ const Profile = () => {
                 autoComplete="address"
                 autoFocus
               />
-            </div>
-            <div>
-              <InputLabel> Phone no. </InputLabel>
-              <TextField
+            </FormControl>
+            <FormControl>
+              <FormLabel> Phone no. </FormLabel>
+              <OutlinedInput
                 fullWidth
                 name="phone"
                 type="tel"
@@ -198,7 +210,7 @@ const Profile = () => {
                 autoComplete="tel"
                 autoFocus
               />
-            </div>
+            </FormControl>
           </form>
         </Box>
       )}
@@ -208,7 +220,7 @@ const Profile = () => {
           <Typography variant="h6" mb={2}>
             Security Settings
           </Typography>
-          <TextField
+          <OutlinedInput
             label="Current Password"
             type="password"
             value={form.currentPassword}
@@ -218,7 +230,7 @@ const Profile = () => {
             fullWidth
             sx={{ mb: 2 }}
           />
-          <TextField
+          <OutlinedInput
             label="New Password"
             type="password"
             name="newPassword"
@@ -229,7 +241,7 @@ const Profile = () => {
             fullWidth
             sx={{ mb: 2 }}
           />
-          <TextField
+          <OutlinedInput
             label="Confirm New Password"
             type="password"
             name="confirmNewPassword"
