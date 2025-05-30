@@ -20,6 +20,10 @@ const transactionSchema = new Schema(
       type: Number,
       required: true,
     },
+    isDelete: {
+      type: Boolean,
+      default: false
+    },
     type: {
       type: String,
       enum: ["Expense", "Income"],

@@ -33,7 +33,9 @@ export const addTransaction = async (req, res) => {
 
 export const getTransaction = async (req, res) => {
   try {
-    const transaction = await Transaction.find().sort({ date: -1 })
+    const transaction = await Transaction.find({
+      isDelete: { $ne: true },
+    }).sort({ date: -1 });
     if (!transaction) {
       return res.status(400).json({ message: "error to get transaction" });
     }
@@ -73,8 +75,14 @@ export const deleteTransaction = async (req, res) => {
       return res.status(400).json({ message: "Transaction ID is required" });
     }
 
-    const trashed = await Transaction.findByIdAndDelete(id);
-    // console.log(trashed);
+    const trashed = await Transaction.findByIdAndUpdate(
+      id,
+      { isDelete: true },
+      {
+        new: true,
+      }
+    );
+    console.log(trashed);
 
     if (!trashed) {
       return res
@@ -114,7 +122,10 @@ export const uploadExcelTransaction = async (req, res) => {
       new Date(row.date).toLocaleDateString("en-CA")
     );
 
-    const checkDates = await Transaction.find({ date: { $in: Dates } }) //it's check in database the date avilable or not
+    const checkDates = await Transaction.find({
+      date: { $in: Dates },
+      isDelete: { $ne: true },
+    }); //it's check in database the date avilable or not
     console.log(checkDates);
 
     if (checkDates.length !== 0) {
@@ -133,7 +144,7 @@ export const uploadExcelTransaction = async (req, res) => {
       description: row.description,
       type: row.type,
     }));
-
+    
     // console.log(transactions)
 
     await Transaction.insertMany(transactions);
@@ -145,5 +156,17 @@ export const uploadExcelTransaction = async (req, res) => {
   } catch (error) {
     console.error("Import failed:", error);
     return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getDeletedTransaction = async (req, res) => {
+  try {
+    const delteTransaction = await Transaction.find({ isDelete: true });
+    console.log(delteTransaction);
+
+    return res.status(200).json(delteTransaction);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
   }
 };

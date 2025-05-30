@@ -21,7 +21,7 @@ const fileFilter = (_, file, cb) => {
         cb(null, true)
     } else {
         cb(new Error('Only .xlsx files are allowed!'), false);
-      }
+    }
 }
 
 const upload = multer({

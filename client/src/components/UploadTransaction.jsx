@@ -48,7 +48,7 @@ const UploadTransaction = ({ openUploadFile, setOpenUploadFile }) => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Something went wrong!",
+        text: error.data.message,
       });
       setOpenUploadFile(false);
     }
