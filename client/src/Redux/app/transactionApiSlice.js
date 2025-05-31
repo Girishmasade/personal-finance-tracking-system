@@ -43,6 +43,13 @@ export const transactionApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+    getTrashTransactions: builder.query({
+      query: () => ({
+        url: `${TRANSACTION_URI}/get-deleted-transaction`,
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
@@ -51,5 +58,6 @@ export const {
   useGetTransactionsQuery,
   useUpdateTransactionsMutation,
   useDeleteTransactionsMutation,
-  useUploadTransacationFileMutation
+  useUploadTransacationFileMutation,
+  useGetTrashTransactionsQuery
 } = transactionApiSlice;

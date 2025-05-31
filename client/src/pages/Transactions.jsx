@@ -28,7 +28,7 @@ const Transactions = () => {
   // ];
   
 
-  const {data, error, isLoading, refetch} = useGetTransactionsQuery()
+  const {data, error, isLoading} = useGetTransactionsQuery()
   const transactions = data?.transaction || []
 
   // console.log(data);

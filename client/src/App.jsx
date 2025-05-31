@@ -9,6 +9,7 @@ import Charts from './pages/Charts';
 import Profile from './pages/Profile';
 import LoginPage from './components/authantication/Login';
 import SignupPage from './components/authantication/Signup';
+import Trash from './pages/Trash';
 
 const App = () => {
   const [mode, setMode] = useState('light');
@@ -30,6 +31,7 @@ const App = () => {
             <Route path='/transactions' element={<Transactions />} />
             <Route path='/charts' element={<Charts />} />
             <Route path='/profile' element={<Profile />} />
+            <Route path='/trash' element={<Trash />} />
           </Route>
 
           <Route path='/signup' element={<SignupPage />} />

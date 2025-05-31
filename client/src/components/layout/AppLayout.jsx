@@ -29,6 +29,7 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import SyncAltIcon from "@mui/icons-material/SyncAlt";
 import PieChartIcon from "@mui/icons-material/PieChart";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
 import LogoutIcon from "@mui/icons-material/Logout";
 
 import { Link, Outlet, useLocation } from "react-router-dom";
@@ -56,6 +57,7 @@ const AppLayout = ({ mode, setMode }) => {
     { text: "Transactions", icon: <SyncAltIcon />, path: "/transactions" },
     { text: "Charts", icon: <PieChartIcon />, path: "/charts" },
     { text: "Profile", icon: <PersonIcon />, path: "/profile" },
+    { text: "Trashed", icon: <DeleteIcon />, path: "/trash" },
   ];
 
   const handleLogout = () => {
