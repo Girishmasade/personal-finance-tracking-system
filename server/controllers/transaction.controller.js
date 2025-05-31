@@ -222,10 +222,58 @@ export const restoreTransaction = async (req, res) => {
         .json({ status: false, message: "error in restore" });
     }
 
-    return res.status(200).json({message: "Transaction restored successfully", restore})
-    
+    return res
+      .status(200)
+      .json({ message: "Transaction restored successfully", restore });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({message: error.message})
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const restoreAllTransaction = async (req, res) => {
+  try {
+    const restoreAll = await Transaction.updateMany(
+      { isDelete: true },
+      { $set: { isDelete: false } }
+    );
+
+    // console.log(restoreAll);
+
+    if (restoreAll.modifiedCount === 0) {
+      return res.status(404).json({
+        message: "No transactions found to restore",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Transactions restored successfully",
+      modifiedCount: restoreAll.modifiedCount,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Error restoring transactions",
+      error: error.message,
+    });
+  }
+};
+
+export const deleteAllTransactions = async (req, res) => {
+  try {
+    const deleteAll = await Transaction.deleteMany({ isDelete: true });
+    // console.log(deleteAll);
+    res.status(200).json({
+      success: true,
+      message: "All soft-deleted transactions have been removed",
+      deletedCount: deleteAll.deletedCount,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error deleting transactions",
+      error: error.message,
+    });
   }
 };
