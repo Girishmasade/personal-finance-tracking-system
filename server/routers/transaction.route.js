@@ -12,6 +12,6 @@ transactionRoute.delete('/delete-transaction/:id', protectRoute, deleteTransacti
 transactionRoute.post('/upload-transaction', protectRoute, uploadXlsx.single('file'), uploadExcelTransaction)
 transactionRoute.get('/get-deleted-transaction', getDeletedTransaction)
 transactionRoute.delete('/permenantly-delete-transaction/:id', isDeleteTransaction)
-transactionRoute.put('/restore-transaction/:id', restoreTransaction)
+transactionRoute.patch('/restore-transaction/:id', restoreTransaction)
 
 export default transactionRoute

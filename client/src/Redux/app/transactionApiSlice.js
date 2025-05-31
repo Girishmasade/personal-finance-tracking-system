@@ -57,6 +57,13 @@ export const transactionApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+    restoreTransaction: builder.mutation({
+      query: (id) => ({
+        url: `${TRANSACTION_URI}/restore-transaction/${id}`,
+        method: "PATCH",
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
@@ -67,5 +74,6 @@ export const {
   useDeleteTransactionsMutation,
   useUploadTransacationFileMutation,
   useGetTrashTransactionsQuery,
-  usePermenantlyDeleteTransactionsMutation
+  usePermenantlyDeleteTransactionsMutation,
+  useRestoreTransactionMutation
 } = transactionApiSlice;

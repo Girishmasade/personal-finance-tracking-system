@@ -14,6 +14,7 @@ import {
   useGetTransactionsQuery,
   useGetTrashTransactionsQuery,
   usePermenantlyDeleteTransactionsMutation,
+  useRestoreTransactionMutation,
 } from "../Redux/app/transactionApiSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -61,8 +62,8 @@ function createData(id, title, amount, date, description, type, category) {
 // ];
 
 const Trash = () => {
-  const { data: isDelete} = useGetTrashTransactionsQuery();
-  const {refetch} = useGetTransactionsQuery()
+  const { data: isDelete, refetch:refetchTrash} = useGetTrashTransactionsQuery();
+  
   const trashTransaction = isDelete;
   // console.log(trashTransaction);
 
@@ -71,7 +72,19 @@ const Trash = () => {
   const handleDelete = async (id) => {
     try {
       const res = await permanentlyDeleteTransaction(id).unwrap();
-      await refetch()
+      await refetchTrash()
+      console.log("Deleted:", res);
+    } catch (error) {
+      console.error("Delete Error:", error);
+    }
+  };
+
+  const [restoreTransaction] = useRestoreTransactionMutation()
+
+  const handleRestore = async (id) => {
+    try {
+      const res = await restoreTransaction(id).unwrap();
+      await refetchTrash()
       console.log("Deleted:", res);
     } catch (error) {
       console.error("Delete Error:", error);
@@ -147,7 +160,7 @@ const Trash = () => {
 
                     <IconButton
                       sx={{ color: "green" }}
-                      // onClick={() => handleEdit(row)}
+                      onClick={() => handleRestore(row._id)}
                     >
                       <RestoreFromTrash />
                     </IconButton>
