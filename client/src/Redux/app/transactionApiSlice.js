@@ -50,6 +50,13 @@ export const transactionApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+    permenantlyDeleteTransactions: builder.mutation({
+      query: (id) => ({
+        url: `${TRANSACTION_URI}/permenantly-delete-transaction/${id}`,
+        method: "DELETE",
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
@@ -59,5 +66,6 @@ export const {
   useUpdateTransactionsMutation,
   useDeleteTransactionsMutation,
   useUploadTransacationFileMutation,
-  useGetTrashTransactionsQuery
+  useGetTrashTransactionsQuery,
+  usePermenantlyDeleteTransactionsMutation
 } = transactionApiSlice;

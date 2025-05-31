@@ -144,7 +144,7 @@ export const uploadExcelTransaction = async (req, res) => {
       description: row.description,
       type: row.type,
     }));
-    
+
     // console.log(transactions)
 
     await Transaction.insertMany(transactions);
@@ -168,5 +168,64 @@ export const getDeletedTransaction = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: error.message });
+  }
+};
+
+export const isDeleteTransaction = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // console.log(req.params);
+
+    if (!id) {
+      return res.status(400).json({ message: "Transaction ID is required" });
+    }
+
+    const trashed = await Transaction.findByIdAndDelete(
+      id,
+      { isDelete: true },
+      {
+        new: true,
+      }
+    );
+    // console.log(trashed);
+
+    if (!trashed) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Transaction not found" });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: `Transaction Deleted successfully.`,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ status: false, message: error.message });
+  }
+};
+
+export const restoreTransaction = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const restore = await Transaction.findByIdAndUpdate(
+      id,
+      { isDelete: false },
+      { new: true }
+    );
+    console.log(restore);
+
+    if (!restore) {
+      return res
+        .status(404)
+        .json({ status: false, message: "error in restore" });
+    }
+
+    return res.status(200).json({message: "Transaction restored successfully", restore})
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message: error.message})
   }
 };

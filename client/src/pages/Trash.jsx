@@ -13,6 +13,7 @@ import { IconButton } from "@mui/material";
 import {
   useGetTransactionsQuery,
   useGetTrashTransactionsQuery,
+  usePermenantlyDeleteTransactionsMutation,
 } from "../Redux/app/transactionApiSlice";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -38,31 +39,44 @@ function createData(id, title, amount, date, description, type, category) {
   return { id, title, amount, date, description, type, category };
 }
 
-const rows = [
-  createData(
-    1,
-    "2025-05-01",
-    "Netflix Subscription",
-    "Entertainment",
-    "Monthly Netflix plan",
-    15.99,
-    "Expense"
-  ),
-  createData(
-    2,
-    "2025-05-02",
-    "Spotify Premium",
-    "Music",
-    "Premium music subscription",
-    9.99,
-    "Expense"
-  ),
-];
+// const rows = [
+//   createData(
+//     1,
+//     "2025-05-01",
+//     "Netflix Subscription",
+//     "Entertainment",
+//     "Monthly Netflix plan",
+//     15.99,
+//     "Expense"
+//   ),
+//   createData(
+//     2,
+//     "2025-05-02",
+//     "Spotify Premium",
+//     "Music",
+//     "Premium music subscription",
+//     9.99,
+//     "Expense"
+//   ),
+// ];
 
 const Trash = () => {
-  const { data: isDelete } = useGetTrashTransactionsQuery();
+  const { data: isDelete} = useGetTrashTransactionsQuery();
+  const {refetch} = useGetTransactionsQuery()
   const trashTransaction = isDelete;
   // console.log(trashTransaction);
+
+  const [permanentlyDeleteTransaction] = usePermenantlyDeleteTransactionsMutation()
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await permanentlyDeleteTransaction(id).unwrap();
+      await refetch()
+      console.log("Deleted:", res);
+    } catch (error) {
+      console.error("Delete Error:", error);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
@@ -95,8 +109,8 @@ const Trash = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.length > 0 ? (
-              isDelete.map((row, index) => (
+            {trashTransaction && trashTransaction.length > 0 ? (
+              trashTransaction.map((row, index) => (
                 <StyledTableRow key={index}>
                   <StyledTableCell>
                     {new Date(row.date).toLocaleDateString("en-CA")}
@@ -126,7 +140,7 @@ const Trash = () => {
                   >
                     <IconButton
                       sx={{ color: "red" }}
-                      // onClick={() => handleDelete(row._id)}
+                      onClick={() => handleDelete(row._id)}
                     >
                       <DeleteForever />
                     </IconButton>

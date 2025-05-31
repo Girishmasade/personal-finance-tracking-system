@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { addTransaction, deleteTransaction, getDeletedTransaction, getTransaction, updateTransactions, uploadExcelTransaction } from '../controllers/transaction.controller.js'
+import { addTransaction, deleteTransaction, getDeletedTransaction, getTransaction, isDeleteTransaction, restoreTransaction, updateTransactions, uploadExcelTransaction } from '../controllers/transaction.controller.js'
 import { protectRoute } from '../middleware/protecteRoute.middleware.js'
 import { uploadXlsx } from '../middleware/multer.middleware.js'
 
@@ -11,5 +11,7 @@ transactionRoute.put('/update-transaction/:id', protectRoute, updateTransactions
 transactionRoute.delete('/delete-transaction/:id', protectRoute, deleteTransaction)
 transactionRoute.post('/upload-transaction', protectRoute, uploadXlsx.single('file'), uploadExcelTransaction)
 transactionRoute.get('/get-deleted-transaction', getDeletedTransaction)
+transactionRoute.delete('/permenantly-delete-transaction/:id', isDeleteTransaction)
+transactionRoute.put('/restore-transaction/:id', restoreTransaction)
 
 export default transactionRoute
