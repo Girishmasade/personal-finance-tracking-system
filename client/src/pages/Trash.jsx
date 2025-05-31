@@ -14,6 +14,7 @@ import {
   useGetTransactionsQuery,
   useGetTrashTransactionsQuery,
   usePermenantlyDeleteTransactionsMutation,
+  useRestoreAllTransactionMutation,
   useRestoreTransactionMutation,
 } from "../Redux/app/transactionApiSlice";
 
@@ -62,32 +63,54 @@ function createData(id, title, amount, date, description, type, category) {
 // ];
 
 const Trash = () => {
-  const { data: isDelete, refetch:refetchTrash} = useGetTrashTransactionsQuery();
-  
+  const { data: isDelete, refetch: refetchTrash } =
+    useGetTrashTransactionsQuery();
+
   const trashTransaction = isDelete;
   // console.log(trashTransaction);
 
-  const [permanentlyDeleteTransaction] = usePermenantlyDeleteTransactionsMutation()
+  const [permanentlyDeleteTransaction] =
+    usePermenantlyDeleteTransactionsMutation();
 
   const handleDelete = async (id) => {
     try {
       const res = await permanentlyDeleteTransaction(id).unwrap();
-      await refetchTrash()
+      await refetchTrash();
       console.log("Deleted:", res);
     } catch (error) {
       console.error("Delete Error:", error);
     }
   };
 
-  const [restoreTransaction] = useRestoreTransactionMutation()
+  const [restoreTransaction] = useRestoreTransactionMutation();
 
   const handleRestore = async (id) => {
     try {
       const res = await restoreTransaction(id).unwrap();
-      await refetchTrash()
+      await refetchTrash();
       console.log("Deleted:", res);
     } catch (error) {
       console.error("Delete Error:", error);
+    }
+  };
+
+  const [restoreAllTransaction] = useRestoreAllTransactionMutation();
+  const handleAllRestoreTransaction = async () => {
+    try {
+      const res = await restoreAllTransaction().unwrap();
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [deleteAllTransaction] = useRestoreAllTransactionMutation();
+  const handleAllDeleteTransaction = async () => {
+    try {
+      const res = await deleteAllTransaction().unwrap();
+      console.log(res);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -101,10 +124,14 @@ const Trash = () => {
       </div>
 
       <div className="flex justify-end gap-4">
-        <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+        <button
+        onClick={() => handleAllRestoreTransaction()}
+         className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
           Restore All
         </button>
-        <button className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+        <button 
+        onClick={() => handleAllDeleteTransaction()}
+        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
           Delete All
         </button>
       </div>

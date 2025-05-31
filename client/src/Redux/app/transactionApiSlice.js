@@ -64,6 +64,18 @@ export const transactionApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+    restoreAllTransaction: builder.mutation({
+      query: () => ({
+        url: `${TRANSACTION_URI}/restore-all-transaction`,
+        method: "PUT"
+      }),
+    }),
+    deleteAllTransaction: builder.mutation({
+      query: () => ({
+        url: `${TRANSACTION_URI}/delete-all-transaction`,
+        method: "DELETE"
+      }),
+    }),
   }),
 });
 
@@ -75,5 +87,7 @@ export const {
   useUploadTransacationFileMutation,
   useGetTrashTransactionsQuery,
   usePermenantlyDeleteTransactionsMutation,
-  useRestoreTransactionMutation
+  useRestoreTransactionMutation,
+  useRestoreAllTransactionMutation,
+  useDeleteAllTransactionMutation
 } = transactionApiSlice;

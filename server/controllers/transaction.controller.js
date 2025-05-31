@@ -240,12 +240,6 @@ export const restoreAllTransaction = async (req, res) => {
 
     // console.log(restoreAll);
 
-    if (restoreAll.modifiedCount === 0) {
-      return res.status(404).json({
-        message: "No transactions found to restore",
-      });
-    }
-
     return res.status(200).json({
       message: "Transactions restored successfully",
       modifiedCount: restoreAll.modifiedCount,
