@@ -10,8 +10,8 @@ import Paper from "@mui/material/Paper";
 import Text from "../components/Text";
 import { RestoreFromTrash, DeleteForever } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import Swal from 'sweetalert2'
 import {
-  useGetTransactionsQuery,
   useGetTrashTransactionsQuery,
   usePermenantlyDeleteTransactionsMutation,
   useRestoreAllTransactionMutation,
@@ -76,9 +76,21 @@ const Trash = () => {
     try {
       const res = await permanentlyDeleteTransaction(id).unwrap();
       await refetchTrash();
-      console.log("Deleted:", res);
+      // console.log("Deleted:", res);
+      Swal.fire({
+        icon: 'success',
+        title: 'Deleted!',
+        text: res.message || 'Transaction deleted permanently.',
+        timer: 1500,
+        showConfirmButton: false,
+      });
     } catch (error) {
-      console.error("Delete Error:", error);
+      // console.error("Delete Error:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Delete Failed',
+        text: error?.data?.message || 'Something went wrong while deleting.',
+      });
     }
   };
 
@@ -88,9 +100,21 @@ const Trash = () => {
     try {
       const res = await restoreTransaction(id).unwrap();
       await refetchTrash();
-      console.log("Deleted:", res);
+      // console.log("Deleted:", res);
+      Swal.fire({
+        icon: 'success',
+        title: 'Restored!',
+        text: res.message || 'Transaction restored successfully.',
+        timer: 1500,
+        showConfirmButton: false,
+      });
     } catch (error) {
-      console.error("Delete Error:", error);
+      // console.error("Delete Error:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Restore Failed',
+        text: error?.data?.message || 'Something went wrong while restoring.',
+      });
     }
   };
 
@@ -98,9 +122,22 @@ const Trash = () => {
   const handleAllRestoreTransaction = async () => {
     try {
       const res = await restoreAllTransaction().unwrap();
-      console.log(res);
+      await refetchTrash()
+      Swal.fire({
+        icon: 'success',
+        title: 'Restored!',
+        text: res.message || 'All transactions restored successfully.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      // console.log(res);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Restore Failed',
+        text: error?.data?.message || 'Something went wrong while restoring.',
+      });
     }
   };
 
@@ -108,9 +145,22 @@ const Trash = () => {
   const handleAllDeleteTransaction = async () => {
     try {
       const res = await deleteAllTransaction().unwrap();
-      console.log(res);
+      await refetchTrash()
+      // console.log(res);
+      Swal.fire({
+        icon: 'success',
+        title: 'Deleted!',
+        text: res.message || 'All soft-deleted transactions were permanently removed.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Delete Failed',
+        text: error?.data?.message || 'Something went wrong while deleting.',
+      });
     }
   };
 
