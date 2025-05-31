@@ -39,8 +39,8 @@ const UploadTransaction = ({ openUploadFile, setOpenUploadFile }) => {
           icon: "success",
           title: "Transaction Uploaded Successfully",
           showConfirmButton: false,
-          timer: 1500
-        })
+          timer: 1500,
+        });
       }
       setOpenUploadFile(false);
     } catch (error) {

@@ -37,6 +37,8 @@ const AddTransactions = ({
   });
 
   useEffect(() => {
+    // console.log("heating");
+    
     if (editData) {
       setForm({
         date: editData.date || "",
@@ -45,6 +47,7 @@ const AddTransactions = ({
         type: editData.type || "Expense",
         description: editData.description || "",
       });
+      
     } else {
       setForm({
         date: "",
@@ -188,7 +191,7 @@ const AddTransactions = ({
             <MenuItem value="Utilities">Utilities</MenuItem>
             <MenuItem value="Healthcare">Healthcare</MenuItem>
             <MenuItem value="Shopping">Shopping</MenuItem>
-            <MenuItem value="Other">Other</MenuItem>
+            <MenuItem value="Salary">Salary</MenuItem>
           </TextField>
 
           <TextField
