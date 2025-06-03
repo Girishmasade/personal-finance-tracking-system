@@ -12,18 +12,14 @@ import {
   Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import {
   useAddTransactionMutation,
   useGetTransactionsQuery,
   useUpdateTransactionsMutation,
 } from "../Redux/app/transactionApiSlice";
 
-const AddTransactions = ({
-  opentransaction,
-  setOpenTransaction,
-  editData = null,
-}) => {
+const AddTransactions = ({ opentransaction, setOpenTransaction, editData = null }) => {
   const [addTransaction, { isLoading, error }] = useAddTransactionMutation();
   const [updateTransaction] = useUpdateTransactionsMutation();
   const { refetch } = useGetTransactionsQuery();
@@ -37,17 +33,14 @@ const AddTransactions = ({
   });
 
   useEffect(() => {
-    // console.log("heating");
-    
     if (editData) {
       setForm({
         date: editData.date || "",
-        amount: editData.amount || "",
+        amount: Number(editData.amount) || 0,
         category: editData.category || "",
         type: editData.type || "Expense",
         description: editData.description || "",
       });
-      
     } else {
       setForm({
         date: "",
@@ -61,48 +54,59 @@ const AddTransactions = ({
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm({
+      ...form,
+      [name]: name === "amount" ? Number(value) : value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!form.date || !form.amount || !form.category || !form.type) {
+      Swal.fire({
+        icon: "warning",
+        title: "Please fill all required fields",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
     try {
       if (editData) {
-       const updateTrans = await updateTransaction({
+        await updateTransaction({
           id: editData._id,
           updateData: { ...form },
         }).unwrap();
-        // console.log(updateTrans);
-        
+
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Data Updated Successfully",
+          title: "Transaction Updated Successfully",
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
       } else {
         await addTransaction(form).unwrap();
+
         Swal.fire({
           position: "center",
           icon: "success",
           title: "Transaction Added Successfully",
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
       }
 
       refetch();
       setOpenTransaction(false);
     } catch (error) {
-      console.error("Error submitting transaction:", error);
+      console.error("Transaction Error:", error);
       Swal.fire({
-        title: 'Error!',
-        text: error.message,
-        icon: 'error',
-        confirmButtonText: 'Cool'
-      })
+        icon: "error",
+        title: "Something went wrong!",
+        text: error.message || "Please try again later.",
+      });
     }
   };
 
@@ -113,20 +117,11 @@ const AddTransactions = ({
       maxWidth="xs"
       fullWidth
       PaperProps={{
-        sx: {
-          borderRadius: 3,
-          px: 2,
-          py: 1.5,
-        },
+        sx: { borderRadius: 3, px: 2, py: 1.5 },
       }}
     >
       <form onSubmit={handleSubmit}>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          px={1}
-        >
+        <Box display="flex" alignItems="center" justifyContent="space-between" px={1}>
           <DialogTitle sx={{ fontWeight: "bold", p: 0 }}>
             {editData ? "Edit Transaction" : "Add Transaction"}
           </DialogTitle>
@@ -212,17 +207,14 @@ const AddTransactions = ({
             type="submit"
             disabled={isLoading}
             variant="contained"
-            sx={{
-              backgroundColor: "#111",
-              "&:hover": {
-                backgroundColor: "#333",
-              },
-            }}
+            sx={{ backgroundColor: "#111", "&:hover": { backgroundColor: "#333" } }}
           >
             {isLoading ? "Saving..." : editData ? "Update" : "Save"}
           </Button>
           {error && (
-            <Typography color="error">Failed to submit transaction</Typography>
+            <Typography color="error" variant="caption">
+              Failed to submit transaction
+            </Typography>
           )}
         </DialogActions>
       </form>

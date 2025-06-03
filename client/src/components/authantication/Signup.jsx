@@ -13,6 +13,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Link, useNavigate } from "react-router-dom";
 import { useRegisterUserMutation } from "../../Redux/app/authApiSlice";
+import Swal from "sweetalert2";
 
 
 const SignupPage = () => {
@@ -36,11 +37,22 @@ const SignupPage = () => {
     // console.log(form);
     try {
       const res = await registerUser(form).unwrap()
-      console.log('user registered', res);
+      Swal.fire({
+        icon: "success",
+        title: "Registration Successfully",
+        text: "You can now log in",
+        timer: 1500,
+        showConfirmButton: false
+      })
+      // console.log('user registered', res);
       navigate('/login')
     } catch (error) {
       console.error('Registration error:', error);
-
+      Swal.fire({
+        icon: "error",
+        title: "Registration Failed",
+        text: error?.data?.message || "Something went wrong. Please try again.",
+      });
     }
   };
 

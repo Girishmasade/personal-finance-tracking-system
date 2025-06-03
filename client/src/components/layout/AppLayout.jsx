@@ -34,7 +34,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 import { Link, Outlet, useLocation } from "react-router-dom";
 import AddTransactions from "../AddTransactions";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../Redux/api/authSlice";
 import UploadTransaction from "../UploadTransaction";
 
@@ -42,6 +42,7 @@ const drawerWidth = 240;
 
 const AppLayout = ({ mode, setMode }) => {
   const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch()
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [opentransaction, setOpenTransaction] = useState(false);
@@ -61,7 +62,7 @@ const AppLayout = ({ mode, setMode }) => {
   ];
 
   const handleLogout = () => {
-    logout();
+   dispatch(logout())
   };
 
   return (

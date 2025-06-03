@@ -8,7 +8,11 @@ import SelectActionCard from '../components/Card'
 
 const Dashboard = () => {
 
-  const {data} = useGetTransactionsQuery()
+  const {data} = useGetTransactionsQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: true
+  })
   const transactions = data?.transaction || []
 
   return (

@@ -106,7 +106,7 @@ export const deleteTransaction = async (req, res) => {
         new: true,
       }
     );
-    console.log(trashed);
+    // console.log(trashed);
 
     if (!trashed) {
       return res
@@ -191,7 +191,7 @@ export const getDeletedTransaction = async (req, res) => {
   try {
     const user = req.user._id
     const delteTransaction = await Transaction.find({ isDelete: true, userRef: user });
-    console.log(delteTransaction);
+    // console.log(delteTransaction);
 
     return res.status(200).json(delteTransaction);
   } catch (error) {
@@ -202,6 +202,7 @@ export const getDeletedTransaction = async (req, res) => {
 
 export const isDeleteTransaction = async (req, res) => {
   try {
+    const user = req.user._id
     const { id } = req.params;
 
     // console.log(req.params);
@@ -212,7 +213,10 @@ export const isDeleteTransaction = async (req, res) => {
 
     const trashed = await Transaction.findByIdAndDelete(
       id,
-      { isDelete: true },
+      { isDelete: true ,
+        userRef: user
+      },
+      
       {
         new: true,
       }
@@ -245,7 +249,7 @@ export const restoreTransaction = async (req, res) => {
       {userRef: user},
       { new: true }
     );
-    console.log(restore);
+    // console.log(restore);
 
     if (!restore) {
       return res

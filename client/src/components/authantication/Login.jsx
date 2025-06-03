@@ -5,8 +5,6 @@ import {
   TextField,
   Button,
   Typography,
-  Checkbox,
-  FormControlLabel,
   InputAdornment,
   IconButton,
   Paper,
@@ -17,21 +15,21 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../Redux/app/authApiSlice";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../Redux/api/authSlice";
+import Swal from "sweetalert2";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [login, { isLoading, error }] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
   const [form, setForm] = useState({
     email: "",
     password: "",
-    remember: false,
   });
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -41,13 +39,24 @@ const LoginPage = () => {
         email: form.email,
         password: form.password,
       }).unwrap();
-      // console.log(userData);
-      // After login API success
+
       dispatch(setCredentials({ user: userData.user, token: userData.token }));
+
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: "Welcome back!",
+        timer: 1500,
+        showConfirmButton: false,
+      });
 
       navigate("/");
     } catch (error) {
-      console.error("Login failed:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error?.data?.message || "Please check your credentials and try again.",
+      });
     }
   };
 
@@ -105,34 +114,10 @@ const LoginPage = () => {
               }}
             />
 
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              mb={2}
-            >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={form.remember}
-                    onChange={handleChange}
-                    name="remember"
-                    color="primary"
-                  />
-                }
-                label="Remember me"
-              />
-              <Typography
-                variant="body2"
-                sx={{ cursor: "pointer", color: "primary.main" }}
-              >
-                Forgot password?
-              </Typography>
-            </Box>
+            {/* Removed Remember me checkbox */}
 
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
               <Typography>Don't Have an Account</Typography>
-
               <Link
                 to="/signup"
                 className="text-blue-500 hover:text-blue-600 underline"
@@ -155,7 +140,6 @@ const LoginPage = () => {
             >
               {isLoading ? "Logging..." : " Login"}
             </Button>
-            {error && <p style={{ color: "red" }}>Login Failed</p>}
           </form>
         </Paper>
       </Grid>

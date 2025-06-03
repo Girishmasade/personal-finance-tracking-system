@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Table from "../components/Table";
 import Text from "../components/Text";
 import {
@@ -12,34 +12,20 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useGetTransactionsQuery } from "../Redux/app/transactionApiSlice";
-import Dashboard from "./Dashboard";
 
 const Transactions = () => {
   const [search, setSearch] = useState("");
   const [type, setType] = useState("All Types");
   const [category, setCategory] = useState("All Categories");
 
-  // const rows = [
-  //   { date: "7/18/2023", category: "Food", description: "Grocery shopping", amount: 85.0, type: "Expense" },
-  //   { date: "7/15/2023", category: "Freelance", description: "Website design project", amount: 500.0, type: "Income" },
-  //   { date: "7/10/2023", category: "Utilities", description: "Electricity bill", amount: 120.0, type: "Expense" },
-  //   { date: "7/5/2023", category: "Housing", description: "Rent payment", amount: 1200.0, type: "Expense" },
-  //   { date: "7/1/2023", category: "Salary", description: "Monthly salary", amount: 3500.0, type: "Income" },
-  // ];
-  
-
-  const {data, error, isLoading} = useGetTransactionsQuery()
-  const transactions = data?.transaction || []
-
-  // console.log(data);
-  
+  const { data, error, isLoading } = useGetTransactionsQuery();
+  const transactions = data?.transaction || [];
 
   const filteredRows = transactions.filter((row) =>
     Object.values(row).join(" ").toLowerCase().includes(search.toLowerCase()) &&
     (type === "All Types" || row.type === type) &&
     (category === "All Categories" || row.category === category)
   );
-  
 
   const handleReset = () => {
     setSearch("");
@@ -56,8 +42,8 @@ const Transactions = () => {
         </Typography>
       </Box>
 
-      {/* Filters Grid - Responsive */}
-      <Grid container size={{ xs: 6, md: 8 }} alignItems="center" mb={2} gap={2}>
+      {/* Filters Grid */}
+      <Grid container spacing={2} alignItems="center" mb={2}>
         {/* Search Field */}
         <Grid item xs={12} sm={6} md={3}>
           <TextField
@@ -116,7 +102,7 @@ const Transactions = () => {
           <Button
             fullWidth
             variant="outlined"
-            color="danger"
+            color="error"
             size="small"
             onClick={handleReset}
             sx={{ height: '40px' }}
@@ -126,13 +112,14 @@ const Transactions = () => {
         </Grid>
       </Grid>
 
+      {/* Loading/Error Handling */}
       {isLoading && <Typography>Loading transactions...</Typography>}
       {error && <Typography color="error">Failed to load transactions.</Typography>}
 
-      {/* Table Section */}
+      {/* Table Display */}
       {!isLoading && !error && (
         <Box pt={4}>
-          <Table rows={filteredRows} />
+         <Table rows={filteredRows} />
         </Box>
       )}
     </Box>
