@@ -41,7 +41,7 @@ const Profile = () => {
   const [updateUser, { isLoading }] = useUpdateUserMutation();
   const { user } = useSelector((state) => state.auth);
 
-console.log(user);
+// console.log(user);
 
 
   if (form.newPassword && form.newPassword === form.confirmNewPassword) {

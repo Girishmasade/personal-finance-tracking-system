@@ -1,41 +1,81 @@
-import React, { useMemo, useState } from 'react';
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
-import AppLayout from './components/layout/AppLayout';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import React, { useMemo, useState } from "react";
+import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import AppLayout from "./components/layout/AppLayout";
+import { Navigate, Route, Routes } from "react-router-dom";
 
-import Dashboard from './pages/Dashboard';
-import Transactions from './pages/Transactions';
-import Charts from './pages/Charts';
-import Profile from './pages/Profile';
-import LoginPage from './components/authantication/Login';
-import SignupPage from './components/authantication/Signup';
-import Trash from './pages/Trash';
+import Dashboard from "./pages/Dashboard";
+import Transactions from "./pages/Transactions";
+import Charts from "./pages/Charts";
+import Profile from "./pages/Profile";
+import LoginPage from "./components/authantication/Login";
+import SignupPage from "./components/authantication/Signup";
+import Trash from "./pages/Trash";
+import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 
 const App = () => {
-  const [mode, setMode] = useState('light');
+  const [mode, setMode] = useState("light");
 
-  const theme = useMemo(() => createTheme({
-    palette: {
-      mode,
-    },
-  }), [mode]);
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+        },
+      }),
+    [mode]
+  );
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <main className='w-full min-h-screen'>
+      <main className="w-full min-h-screen">
         <Routes>
           <Route element={<AppLayout mode={mode} setMode={setMode} />}>
-            <Route index path='/' element={<Navigate to='/dashboard' />} />
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/transactions' element={<Transactions />} />
-            <Route path='/charts' element={<Charts />} />
-            <Route path='/profile' element={<Profile />} />
-            <Route path='/trash' element={<Trash />} />
+            <Route index path="/" element={<Navigate to="/dashboard" />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoutes>
+                  <Dashboard />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/transactions"
+              element={
+                <ProtectedRoutes>
+                  <Transactions />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/charts"
+              element={
+                <ProtectedRoutes>
+                  <Charts />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoutes>
+                  <Profile />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/trash"
+              element={
+                <ProtectedRoutes>
+                  <Trash />
+                </ProtectedRoutes>
+              }
+            />
           </Route>
 
-          <Route path='/signup' element={<SignupPage />} />
-          <Route path='/login' element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </main>
     </ThemeProvider>
