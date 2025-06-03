@@ -1,19 +1,26 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
-import AppLayout from "./components/layout/AppLayout";
 import { Navigate, Route, Routes } from "react-router-dom";
 
+import AppLayout from "./components/layout/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
 import Charts from "./pages/Charts";
 import Profile from "./pages/Profile";
+import Trash from "./pages/Trash";
+
 import LoginPage from "./components/authantication/Login";
 import SignupPage from "./components/authantication/Signup";
-import Trash from "./pages/Trash";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
 
 const App = () => {
-  const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState(() => {
+    return localStorage.getItem("themeMode") || "light";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("themeMode", mode);
+  }, [mode]);
 
   const theme = useMemo(
     () =>
@@ -24,13 +31,18 @@ const App = () => {
       }),
     [mode]
   );
+  const toggleTheme = () => {
+    setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <main className="w-full min-h-screen">
         <Routes>
-          <Route element={<AppLayout mode={mode} setMode={setMode} />}>
+          <Route
+            element={<AppLayout mode={mode} toggleTheme={toggleTheme} />}
+          >
             <Route index path="/" element={<Navigate to="/dashboard" />} />
             <Route
               path="/dashboard"

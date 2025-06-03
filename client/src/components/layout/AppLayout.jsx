@@ -40,7 +40,7 @@ import UploadTransaction from "../UploadTransaction";
 
 const drawerWidth = 240;
 
-const AppLayout = ({ mode, setMode }) => {
+const AppLayout = ({ mode, toggleTheme }) => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch()
   const theme = useTheme();
@@ -98,7 +98,7 @@ const AppLayout = ({ mode, setMode }) => {
           <Box display="flex" alignItems="center" gap={2}>
             <Tooltip title="Toggle light/dark theme">
               <IconButton
-                onClick={() => setMode(mode === "light" ? "dark" : "light")}
+                onClick={toggleTheme}
               >
                 {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
               </IconButton>
