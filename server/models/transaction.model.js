@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import User from "./user.model.js";
 
 const transactionSchema = new Schema(
   {
@@ -23,6 +24,11 @@ const transactionSchema = new Schema(
     isDelete: {
       type: Boolean,
       default: false
+    },
+    userRef:{
+      type: mongoose.Types.ObjectId,
+      ref: User,
+      required: true
     },
     type: {
       type: String,

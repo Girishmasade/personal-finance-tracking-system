@@ -62,7 +62,15 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user._id, username: user.username, email: user.email },
+      {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        address: user.address,
+        phone: user.phone,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
@@ -74,6 +82,10 @@ export const login = async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        address: user.address,
+        phone: user.phone,
       },
     });
   } catch (error) {
@@ -115,13 +127,20 @@ export const forgetPass = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  const {id} = req.params
+  const { id } = req.params;
   try {
-    const {username, email, firstname, lastname, address, phone, newPassword} = req.body
-    const user = await User.findById({_id: id})
+    const {
+      username,
+      email,
+      firstname,
+      lastname,
+      address,
+      phone,
+      newPassword,
+    } = req.body;
+    const user = await User.findById({ _id: id });
 
     // console.log(user);
-    
 
     if (!user) {
       return res.status(404).json({
@@ -130,17 +149,15 @@ export const updateProfile = async (req, res) => {
       });
     }
 
-
-    user.username = username,
-    user.email = email,
-    user.firstname = firstname,
-    user.lastname = lastname,
-    user.address = address,
-    user.phone = phone
-
+    (user.username = username),
+      (user.email = email),
+      (user.firstname = firstname),
+      (user.lastname = lastname),
+      (user.address = address),
+      (user.phone = phone);
 
     if (newPassword) {
-      const hashedPassword = await bcrypt.hash(newPassword, 10)
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
       user.password = hashedPassword;
     }
 
@@ -151,7 +168,6 @@ export const updateProfile = async (req, res) => {
       message: "Profile updated successfully",
       user,
     });
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -159,5 +175,6 @@ export const updateProfile = async (req, res) => {
       message: error.message,
     });
   }
+};
 
-}
+export const logout = async (req, res) => {};

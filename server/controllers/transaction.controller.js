@@ -4,6 +4,8 @@ import xlsx from "xlsx";
 
 export const addTransaction = async (req, res) => {
   try {
+    const user = req.user._id;
+
     const { date, category, description, amount, type } = req.body;
 
     if (!date || !category || !description || !amount || !type) {
@@ -18,6 +20,7 @@ export const addTransaction = async (req, res) => {
       description,
       type,
       amount,
+      userRef: user,
     });
 
     // console.log(transaction);
@@ -33,9 +36,13 @@ export const addTransaction = async (req, res) => {
 
 export const getTransaction = async (req, res) => {
   try {
+    // console.log(req.user); done
+
     const transaction = await Transaction.find({
       isDelete: { $ne: true },
+      userRef: req.user._id,
     }).sort({ date: -1 });
+
     if (!transaction) {
       return res.status(400).json({ message: "error to get transaction" });
     }
@@ -49,16 +56,31 @@ export const getTransaction = async (req, res) => {
 
 export const updateTransactions = async (req, res) => {
   try {
+    const user = req.user._id;
     const { id } = req.params;
     const { updateData } = req.body;
 
-    const updateTrans = await Transaction.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
+    const transaction = await Transaction.findById(id);
 
-    // console.log(updateTrans);
+    if (
+      transaction &&
+      JSON.stringify(transaction.userRef) === JSON.stringify(user)
+    ) {
+      const updateTrans = await Transaction.findByIdAndUpdate(id, updateData, {
+        new: true,
+      });
 
-    return res.json(updateTrans);
+      // console.log(updateTrans);
+
+      return res.json({ message: "Transaction updated successfully." });
+    } else {
+      return res
+        .status(500)
+        .json({
+          success: false,
+          message: "Transaction updation failed due to invalid access.",
+        });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -67,6 +89,7 @@ export const updateTransactions = async (req, res) => {
 
 export const deleteTransaction = async (req, res) => {
   try {
+    const user = req.user._id;
     const { id } = req.params;
 
     // console.log(req.params);
@@ -78,6 +101,7 @@ export const deleteTransaction = async (req, res) => {
     const trashed = await Transaction.findByIdAndUpdate(
       id,
       { isDelete: true },
+      { userRef: user },
       {
         new: true,
       }
@@ -104,6 +128,8 @@ export const uploadExcelTransaction = async (req, res) => {
   try {
     // console.log(req.file);
 
+    const user = req.user._id;
+
     if (!req.file) {
       return res
         .status(400)
@@ -125,6 +151,7 @@ export const uploadExcelTransaction = async (req, res) => {
     const checkDates = await Transaction.find({
       date: { $in: Dates },
       isDelete: { $ne: true },
+      userRef: user,
     }); //it's check in database the date avilable or not
     console.log(checkDates);
 
@@ -143,6 +170,7 @@ export const uploadExcelTransaction = async (req, res) => {
       category: row.category,
       description: row.description,
       type: row.type,
+      userRef: user,
     }));
 
     // console.log(transactions)
@@ -161,7 +189,8 @@ export const uploadExcelTransaction = async (req, res) => {
 
 export const getDeletedTransaction = async (req, res) => {
   try {
-    const delteTransaction = await Transaction.find({ isDelete: true });
+    const user = req.user._id
+    const delteTransaction = await Transaction.find({ isDelete: true, userRef: user });
     console.log(delteTransaction);
 
     return res.status(200).json(delteTransaction);
@@ -208,10 +237,12 @@ export const isDeleteTransaction = async (req, res) => {
 
 export const restoreTransaction = async (req, res) => {
   try {
+    const user = req.user._id
     const { id } = req.params;
     const restore = await Transaction.findByIdAndUpdate(
       id,
       { isDelete: false },
+      {userRef: user},
       { new: true }
     );
     console.log(restore);
@@ -233,8 +264,10 @@ export const restoreTransaction = async (req, res) => {
 
 export const restoreAllTransaction = async (req, res) => {
   try {
+    const user = req.user._id
     const restoreAll = await Transaction.updateMany(
       { isDelete: true },
+      {userRef: user},
       { $set: { isDelete: false } }
     );
 
@@ -255,7 +288,8 @@ export const restoreAllTransaction = async (req, res) => {
 
 export const deleteAllTransactions = async (req, res) => {
   try {
-    const deleteAll = await Transaction.deleteMany({ isDelete: true });
+    const user = req.user._id
+    const deleteAll = await Transaction.deleteMany({ isDelete: true, userRef: user});
     // console.log(deleteAll);
     res.status(200).json({
       success: true,

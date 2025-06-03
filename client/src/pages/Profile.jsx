@@ -34,10 +34,15 @@ const Profile = () => {
     email: "",
     address: "",
     phone: "",
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
   });
-  const [updateUser, { isLoading, error }] = useUpdateUserMutation();
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
   const { user } = useSelector((state) => state.auth);
-  // console.log("user", user);
+
+console.log(user);
+
 
   if (form.newPassword && form.newPassword === form.confirmNewPassword) {
     form.password = form.newPassword;
@@ -64,12 +69,12 @@ const Profile = () => {
         phone: user.phone || "",
       }));
     }
-  }, []);
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await updateUser({
+      await updateUser({
         id: user.id,
         ...form,
       }).unwrap();
@@ -80,7 +85,6 @@ const Profile = () => {
         showConfirmButton: false,
         timer: 1500,
       });
-      // console.log(res);
     } catch (error) {
       console.log(error);
       Swal.fire({
@@ -95,202 +99,198 @@ const Profile = () => {
 
   return (
     <Box p={4}>
-      <Paper elevation={1}>
-        <List>
-          {tabItems.map((item, index) => (
-            <ListItem
-              key={item.label}
-              selected={tab === index}
-              onClick={() => handleChange(index)}
-              sx={{ cursor: "pointer" }}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText>{item.label}</ListItemText>
-            </ListItem>
-          ))}
-        </List>
+      <Paper elevation={2}>
+        <Box display="flex">
+          {/* Sidebar */}
+          <Box
+            width="250px"
+            borderRight="1px solid #ddd"
+            height="100%"
+            minHeight="500px"
+          >
+            <List>
+              {tabItems.map((item, index) => (
+                <ListItem
+                  key={item.label}
+                  selected={tab === index}
+                  onClick={() => handleChange(index)}
+                  sx={{
+                    cursor: "pointer",
+                    backgroundColor: tab === index ? "#f0f0f0" : "inherit",
+                    borderLeft:
+                      tab === index
+                        ? "4px solid #1976d2"
+                        : "4px solid transparent",
+                    color: tab === index ? "#1976d2" : "inherit",
+                    fontWeight: tab === index ? "bold" : "normal",
+                    "&:hover": {
+                      backgroundColor: "#f5f5f5",
+                    },
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      color: tab === index ? "#1976d2" : "inherit",
+                    }}
+                  >
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+
+          {/* Content Area */}
+          <Box flex={1} p={4}>
+            {tab === 0 && (
+              <Box>
+                <Text
+                  title="Personal Information"
+                  subTitle="Enter your details to update your profile"
+                />
+
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex flex-wrap flex-col pt-7 gap-4 w-full"
+                >
+                  <FormControl fullWidth sx={{ mb: 2 }}>
+                    <FormLabel>Username</FormLabel>
+                    <OutlinedInput
+                      name="username"
+                      value={form.username}
+                      onChange={handleInputChange}
+                      placeholder="Enter your username"
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth sx={{ mb: 2 }}>
+                    <FormLabel>First Name</FormLabel>
+                    <OutlinedInput
+                      name="firstname"
+                      value={form.firstname}
+                      onChange={handleInputChange}
+                      placeholder="Enter your first name"
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth sx={{ mb: 2 }}>
+                    <FormLabel>Last Name</FormLabel>
+                    <OutlinedInput
+                      name="lastname"
+                      value={form.lastname}
+                      onChange={handleInputChange}
+                      placeholder="Enter your last name"
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth sx={{ mb: 2 }}>
+                    <FormLabel>Email</FormLabel>
+                    <OutlinedInput
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleInputChange}
+                      placeholder="Enter your email"
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth sx={{ mb: 2 }}>
+                    <FormLabel>Address</FormLabel>
+                    <OutlinedInput
+                      name="address"
+                      value={form.address}
+                      onChange={handleInputChange}
+                      placeholder="Enter your address"
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth sx={{ mb: 2 }}>
+                    <FormLabel>Phone Number</FormLabel>
+                    <OutlinedInput
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleInputChange}
+                      placeholder="Enter your phone number"
+                    />
+                  </FormControl>
+                </form>
+              </Box>
+            )}
+
+            {tab === 1 && (
+              <Box>
+                <Typography variant="h6" mb={2}>
+                  Security Settings
+                </Typography>
+
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                  <FormLabel>Current Password</FormLabel>
+                  <OutlinedInput
+                    type="password"
+                    name="currentPassword"
+                    value={form.currentPassword}
+                    onChange={handleInputChange}
+                    placeholder="Enter current password"
+                  />
+                </FormControl>
+
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                  <FormLabel>New Password</FormLabel>
+                  <OutlinedInput
+                    type="password"
+                    name="newPassword"
+                    value={form.newPassword}
+                    onChange={handleInputChange}
+                    placeholder="Enter new password"
+                  />
+                </FormControl>
+
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                  <FormLabel>Confirm New Password</FormLabel>
+                  <OutlinedInput
+                    type="password"
+                    name="confirmNewPassword"
+                    value={form.confirmNewPassword}
+                    onChange={handleInputChange}
+                    placeholder="Confirm new password"
+                  />
+                </FormControl>
+              </Box>
+            )}
+
+            {tab === 2 && (
+              <Box>
+                <Typography variant="h6" mb={2}>
+                  Export Your Data
+                </Typography>
+                <Typography variant="body1" mb={2}>
+                  Download a copy of your personal data including your profile,
+                  payment history, and activity logs.
+                </Typography>
+                <Button variant="contained" color="primary">
+                  Export Data
+                </Button>
+              </Box>
+            )}
+
+            {tab !== 2 && (
+              <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+                <Button variant="outlined">Cancel</Button>
+                <Button
+                  type="submit"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                  variant="contained"
+                  color="primary"
+                >
+                  {isLoading ? "Updating..." : "Update"}
+                </Button>
+              </Box>
+            )}
+          </Box>
+        </Box>
       </Paper>
-      <Divider sx={{ my: 3 }} />
-      {tab === 0 && (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "2px",
-            paddingLeft: "21px",
-          }}
-        >
-          <Text
-            title={"Personal Information"}
-            subTitle={"Enter your details update here"}
-          />
-
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-wrap flex-col pt-7 gap-4 w-full"
-          >
-            <FormControl>
-              <FormLabel> Username </FormLabel>
-              <OutlinedInput
-                fullWidth
-                name="username"
-                type="text"
-                placeholder="Enter your username"
-                value={form.username}
-                onChange={handleInputChange}
-                autoComplete="username"
-                autoFocus
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel> First Name </FormLabel>
-              <OutlinedInput
-                fullWidth
-                name="firstname"
-                type="text"
-                placeholder="Enter your first name"
-                value={form.firstname}
-                onChange={handleInputChange}
-                autoComplete="firstname"
-                autoFocus
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel> Last Name </FormLabel>
-              <OutlinedInput
-                fullWidth
-                name="lastname"
-                type="text"
-                placeholder="Enter your last name"
-                value={form.lastname}
-                onChange={handleInputChange}
-                autoComplete="lastname"
-                autoFocus
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel> Email </FormLabel>
-              <OutlinedInput
-                fullWidth
-                name="email"
-                type="email"
-                placeholder="Enter your email"
-                value={form.email}
-                onChange={handleInputChange}
-                autoComplete="email"
-                autoFocus
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel> Address </FormLabel>
-              <OutlinedInput
-                fullWidth
-                name="address"
-                type="text"
-                placeholder="Enter your address"
-                value={form.address}
-                onChange={handleInputChange}
-                autoComplete="address"
-                autoFocus
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel> Phone no. </FormLabel>
-              <OutlinedInput
-                fullWidth
-                name="phone"
-                type="tel"
-                placeholder="Enter your phone number"
-                value={form.phone}
-                onChange={handleInputChange}
-                autoComplete="tel"
-                autoFocus
-              />
-            </FormControl>
-          </form>
-        </Box>
-      )}
-
-      {tab === 1 && (
-        <Box>
-          <Typography variant="h6" mb={2}>
-            Security Settings
-          </Typography>
-          <OutlinedInput
-            label="Current Password"
-            type="password"
-            value={form.currentPassword}
-            onChange={handleInputChange}
-            name="currentPassword"
-            autoComplete="current-password"
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-          <OutlinedInput
-            label="New Password"
-            type="password"
-            name="newPassword"
-            value={form.newPassword}
-            onChange={handleInputChange}
-            autoComplete="new-password"
-            placeholder="Enter new password"
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-          <OutlinedInput
-            label="Confirm New Password"
-            type="password"
-            name="confirmNewPassword"
-            value={form.confirmNewPassword}
-            onChange={handleInputChange}
-            autoComplete="new-password"
-            placeholder="Confirm new password"
-            fullWidth
-            sx={{ mb: 2 }}
-          />
-        </Box>
-      )}
-
-      {tab === 2 && (
-        <Box>
-          <Typography variant="h6" mb={2}>
-            Export Your Data
-          </Typography>
-          <Typography variant="body1" mb={2}>
-            Download a copy of your personal data including your profile,
-            payment history, and activity logs.
-          </Typography>
-          <Button variant="contained" color="primary">
-            Export Data
-          </Button>
-        </Box>
-      )}
-
-      {tab !== 2 && (
-        <Box
-          sx={{
-            display: "flex",
-            gap: "4px",
-            justifyContent: "end",
-            paddingTop: "4px",
-          }}
-        >
-          <Button variant="outlined">Cancel</Button>
-          <Button
-            type="submit"
-            onClick={handleSubmit}
-            disabled={isLoading}
-            color="primary"
-            variant="contained"
-          >
-            Update
-          </Button>
-        </Box>
-      )}
     </Box>
   );
 };
