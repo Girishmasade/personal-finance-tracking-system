@@ -11,9 +11,9 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../Redux/app/authApiSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../../Redux/api/authSlice";
 import Swal from "sweetalert2";
 
@@ -59,7 +59,10 @@ const LoginPage = () => {
       });
     }
   };
-
+  const {token} = useSelector((state) => state.auth)
+  if (token) {
+    return <Navigate to={"/dashboard"}/>
+  } 
   return (
     <Grid
       container
