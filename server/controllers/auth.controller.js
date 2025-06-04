@@ -118,7 +118,7 @@ export const forgetPass = async (req, res) => {
 
 export const getUserProfile = async (req, res) => {
   const {id} = req.params
-  console.log(id);
+  // console.log(id);
   
   try {
 
@@ -130,7 +130,7 @@ export const getUserProfile = async (req, res) => {
     }
 
     const user = await User.findById(id).select("-password")
-    console.log(user);
+    // console.log(user);
 
     if (!user) {
       return res.status(400).json({success: false, message: "User Not Authorized"})

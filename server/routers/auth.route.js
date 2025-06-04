@@ -7,7 +7,7 @@ const authRoute = Router()
 authRoute.post('/register', register)
 authRoute.post('/login', login)
 authRoute.post('/forget-password', forgetPass)
-authRoute.get('/get-user-profile/:id', getUserProfile)
+authRoute.get('/get-user-profile/:id',protectRoute, getUserProfile)
 authRoute.put('/update-profile/:id', protectRoute, updateProfile)
 
 
