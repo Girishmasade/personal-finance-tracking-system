@@ -72,6 +72,7 @@ const ForgetPassword = () => {
             variant="contained"
             fullWidth
             disabled={isLoading}
+            sx={{backgroundColor: "black", color: "white"}}
           >
             {isLoading ? 'Resetting...' : 'Reset Password'} 
           </Button>

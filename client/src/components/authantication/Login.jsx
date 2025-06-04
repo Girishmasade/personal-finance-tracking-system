@@ -8,6 +8,7 @@ import {
   InputAdornment,
   IconButton,
   Paper,
+  Link as MuiLink 
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -55,14 +56,16 @@ const LoginPage = () => {
       Swal.fire({
         icon: "error",
         title: "Login Failed",
-        text: error?.data?.message || "Please check your credentials and try again.",
+        text:
+          error?.data?.message ||
+          "Please check your credentials and try again.",
       });
     }
   };
-  const {token} = useSelector((state) => state.auth)
+  const { token } = useSelector((state) => state.auth);
   if (token) {
-    return <Navigate to={"/dashboard"}/>
-  } 
+    return <Navigate to={"/dashboard"} />;
+  }
   return (
     <Grid
       container
@@ -119,14 +122,46 @@ const LoginPage = () => {
 
             {/* Removed Remember me checkbox */}
 
-            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-              <Typography>Don't Have an Account</Typography>
-              <Link
-                to="/register"
-                className="text-blue-500 hover:text-blue-600 underline"
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                mb: 3,
+                mt: 2,
+              }}
+            >
+              {/* Forgot Password */}
+              <MuiLink
+                component={Link}
+                to="/forget-password"
+                underline="hover"
+                color="primary"
+                sx={{ fontSize: 14 }}
               >
-                Signup
-              </Link>
+                Forgot Password?
+              </MuiLink>
+
+              {/* Sign Up Row */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <Typography variant="body2">Don't have an account?</Typography>
+                <MuiLink
+                  component={Link}
+                  to="/register"
+                  underline="hover"
+                  color="primary"
+                  sx={{ fontWeight: 500 }}
+                >
+                  Sign Up
+                </MuiLink>
+              </Box>
             </Box>
 
             <Button
