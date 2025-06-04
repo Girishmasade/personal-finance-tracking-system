@@ -31,6 +31,14 @@ export const authApiSlice = apiSlice.injectEndpoints({
         })
     }),
 
+    getUserProfile: builder.query({
+      query: (id) => ({
+        url: `${AUTH_URL}/get-user-profile/${id}`,
+        method: "GET",
+        credentials: "include"
+      })
+    }),
+
     updateUser: builder.mutation({
       query: ({ id, ...body }) => ({
         //...data to get the rest of the body from backend
@@ -46,5 +54,6 @@ export const {
   useLoginMutation,
   useRegisterUserMutation,
   useUpdateUserMutation,
-  useForgetPasswordMutation
+  useForgetPasswordMutation,
+  useGetUserProfileQuery
 } = authApiSlice;

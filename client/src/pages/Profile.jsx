@@ -16,7 +16,7 @@ import { Person, Security, Download } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import Text from "../components/Text";
-import { useUpdateUserMutation } from "../Redux/app/authApiSlice";
+import { useGetUserProfileQuery, useUpdateUserMutation } from "../Redux/app/authApiSlice";
 import { useSelector } from "react-redux";
 
 const tabItems = [
@@ -43,6 +43,7 @@ const Profile = () => {
 
 // console.log(user);
 
+const {data, isError, error} = useGetUserProfileQuery(user.id)
 
   if (form.newPassword && form.newPassword === form.confirmNewPassword) {
     form.password = form.newPassword;
@@ -58,18 +59,18 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (data) {
       setForm((prev) => ({
         ...prev,
-        username: user.username || "",
-        firstname: user.firstname || "",
-        lastname: user.lastname || "",
-        email: user.email || "",
-        address: user.address || "",
-        phone: user.phone || "",
+        username: data?.user?.username || "",
+        firstname: data?.user?.firstname || "",
+        lastname: data?.user?.lastname || "",
+        email: data?.user?.email || "",
+        address: data?.user?.address || "",
+        phone: data?.user?.phone || "",
       }));
     }
-  }, [user]);
+  }, [data]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,6 +97,9 @@ const Profile = () => {
       });
     }
   };
+
+  if (isLoading) return <p>Loading profile...</p>;
+  if (isError) return <p>Error: {error?.data?.message || "Something went wrong"}</p>;
 
   return (
     <Box p={4}>

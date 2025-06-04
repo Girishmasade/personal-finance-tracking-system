@@ -65,11 +65,6 @@ export const login = async (req, res) => {
       {
         id: user._id,
         username: user.username,
-        email: user.email,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        address: user.address,
-        phone: user.phone,
       },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
@@ -81,11 +76,6 @@ export const login = async (req, res) => {
       user: {
         id: user._id,
         username: user.username,
-        email: user.email,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        address: user.address,
-        phone: user.phone,
       },
     });
   } catch (error) {
@@ -125,6 +115,37 @@ export const forgetPass = async (req, res) => {
     });
   }
 };
+
+export const getUserProfile = async (req, res) => {
+  const {id} = req.params
+  console.log(id);
+  
+  try {
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
+      });
+    }
+
+    const user = await User.findById(id).select("-password")
+    console.log(user);
+
+    if (!user) {
+      return res.status(400).json({success: false, message: "User Not Authorized"})
+    }
+    
+    return res.status(200).json({success: true, user})
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
 
 export const updateProfile = async (req, res) => {
   const { id } = req.params;
