@@ -122,7 +122,7 @@ const LoginPage = () => {
             <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
               <Typography>Don't Have an Account</Typography>
               <Link
-                to="/signup"
+                to="/register"
                 className="text-blue-500 hover:text-blue-600 underline"
               >
                 Signup

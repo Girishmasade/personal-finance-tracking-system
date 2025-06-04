@@ -12,6 +12,7 @@ import Trash from "./pages/Trash";
 import LoginPage from "./components/authantication/Login";
 import SignupPage from "./components/authantication/Signup";
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes";
+import ForgetPassword from "./components/authantication/ForgetPassword";
 
 const App = () => {
   const [mode, setMode] = useState(() => {
@@ -86,8 +87,9 @@ const App = () => {
             />
           </Route>
 
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/register" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
         </Routes>
       </main>
     </ThemeProvider>

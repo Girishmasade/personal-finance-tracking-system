@@ -6,7 +6,7 @@ const authRoute = Router()
 
 authRoute.post('/register', register)
 authRoute.post('/login', login)
-authRoute.post('/forget-password', protectRoute, forgetPass)
+authRoute.post('/forget-password', forgetPass)
 authRoute.put('/update-profile/:id', protectRoute, updateProfile)
 
 

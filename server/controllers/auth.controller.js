@@ -176,5 +176,3 @@ export const updateProfile = async (req, res) => {
     });
   }
 };
-
-export const logout = async (req, res) => {};
