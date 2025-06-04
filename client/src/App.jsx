@@ -41,10 +41,17 @@ const App = () => {
       <CssBaseline />
       <main className="w-full min-h-screen">
         <Routes>
+          <Route path="/register" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/" element={<Navigate to="/login" />} />
           <Route
-            element={<AppLayout mode={mode} toggleTheme={toggleTheme} />}
+            element={
+              <ProtectedRoutes>
+                <AppLayout mode={mode} toggleTheme={toggleTheme} />
+              </ProtectedRoutes>
+            }
           >
-            <Route index path="/" element={<Navigate to="/dashboard" />} />
             <Route
               path="/dashboard"
               element={
@@ -86,10 +93,6 @@ const App = () => {
               }
             />
           </Route>
-
-          <Route path="/register" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/forget-password" element={<ForgetPassword />} />
         </Routes>
       </main>
     </ThemeProvider>

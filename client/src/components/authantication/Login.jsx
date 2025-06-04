@@ -51,7 +51,7 @@ const LoginPage = () => {
         showConfirmButton: false,
       });
 
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -62,10 +62,16 @@ const LoginPage = () => {
       });
     }
   };
+
   const { token } = useSelector((state) => state.auth);
+  console.log(token);
+  
   if (token) {
+    console.log("redirecting....");
+    
     return <Navigate to={"/dashboard"} />;
   }
+
   return (
     <Grid
       container

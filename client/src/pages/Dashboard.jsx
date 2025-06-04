@@ -1,7 +1,6 @@
 import React from 'react'
 import Table from '../components/Table'
 import Text from '../components/Text'
-import transactions from '../assets/transactions'
 import { Box } from '@mui/material'
 import { useGetTransactionsQuery } from '../Redux/app/transactionApiSlice'
 import SelectActionCard from '../components/Card'
@@ -14,6 +13,15 @@ const Dashboard = () => {
     refetchOnMountOrArgChange: true
   })
   const transactions = data?.transaction || []
+
+    // const { token } = useSelector((state) => state.auth);
+    // console.log(token);
+    
+    // if (!token) {
+    //   console.log("redirecting....");
+      
+    //   return <Navigate to={"/login"} />;
+    // }
 
   return (
     <div>
