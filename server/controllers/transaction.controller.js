@@ -1,6 +1,7 @@
 import Transaction from "../models/transaction.model.js";
 import path from "path";
 import xlsx from "xlsx";
+import fs from 'fs'
 
 export const addTransaction = async (req, res) => {
   try {
@@ -184,6 +185,11 @@ export const uploadExcelTransaction = async (req, res) => {
   } catch (error) {
     console.error("Import failed:", error);
     return res.status(500).json({ success: false, message: error.message });
+  } finally{
+    if (fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path)
+      console.log("File deleted successfully");
+    }
   }
 };
 
