@@ -64,11 +64,10 @@ const LoginPage = () => {
   };
 
   const { token } = useSelector((state) => state.auth);
-  console.log(token);
+  // console.log(token);
   
   if (token) {
-    console.log("redirecting....");
-    
+    // console.log("redirecting....");
     return <Navigate to={"/dashboard"} />;
   }
 

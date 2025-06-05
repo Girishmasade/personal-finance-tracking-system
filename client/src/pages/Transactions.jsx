@@ -17,21 +17,46 @@ const Transactions = () => {
   const [search, setSearch] = useState("");
   const [type, setType] = useState("All Types");
   const [category, setCategory] = useState("All Categories");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
 
   const { data, error, isLoading } = useGetTransactionsQuery();
   const transactions = data?.transaction || [];
 
-  const filteredRows = transactions.filter((row) =>
-    Object.values(row).join(" ").toLowerCase().includes(search.toLowerCase()) &&
-    (type === "All Types" || row.type === type) &&
-    (category === "All Categories" || row.category === category)
+  const filteredRows = transactions.filter(
+    (row) =>
+      Object.values(row)
+        .join(" ")
+        .toLowerCase()
+        .includes(search.toLowerCase()) &&
+      (type === "All Types" || row.type === type) &&
+      (category === "All Categories" || row.category === category) &&
+      (month === "" || new Date(row.date).getMonth() + 1 === parseInt(month)) &&
+      (year === "" || new Date(row.date).getFullYear() === parseInt(year))
   );
 
   const handleReset = () => {
     setSearch("");
     setType("All Types");
     setCategory("All Categories");
+    setMonth("");
+    setYear("");
   };
+
+  const months = [
+    { label: "January", value: 1 },
+    { label: "February", value: 2 },
+    { label: "March", value: 3 },
+    { label: "April", value: 4 },
+    { label: "May", value: 5 },
+    { label: "June", value: 6 },
+    { label: "July", value: 7 },
+    { label: "August", value: 8 },
+    { label: "September", value: 9 },
+    { label: "October", value: 10 },
+    { label: "November", value: 11 },
+    { label: "December", value: 12 },
+  ];
 
   return (
     <Box p={2}>
@@ -78,6 +103,23 @@ const Transactions = () => {
           </TextField>
         </Grid>
 
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            select
+            fullWidth
+            size="small"
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+          >
+            <MenuItem value={"m"}>Months</MenuItem>
+            {months.map((m) => (
+              <MenuItem key={m.value} value={m.value}>
+                {m.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+
         {/* Category Dropdown */}
         <Grid item xs={12} sm={6} md={3}>
           <TextField
@@ -105,7 +147,7 @@ const Transactions = () => {
             color="error"
             size="small"
             onClick={handleReset}
-            sx={{ height: '40px' }}
+            sx={{ height: "40px" }}
           >
             Reset Filters
           </Button>
@@ -114,12 +156,14 @@ const Transactions = () => {
 
       {/* Loading/Error Handling */}
       {isLoading && <Typography>Loading transactions...</Typography>}
-      {error && <Typography color="error">Failed to load transactions.</Typography>}
+      {error && (
+        <Typography color="error">Failed to load transactions.</Typography>
+      )}
 
       {/* Table Display */}
       {!isLoading && !error && (
         <Box pt={4}>
-         <Table rows={filteredRows} />
+          <Table rows={filteredRows} />
         </Box>
       )}
     </Box>
