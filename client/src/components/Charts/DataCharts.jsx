@@ -47,8 +47,11 @@ const DataCharts = () => {
   const hasExpenseData = Object.keys(expenseByCategory).length > 0;
   const hasIncomeData = Object.keys(incomeByCategory).length > 0;
 
+  const numberFormat = (val) => Math.round(val).toLocaleString("en-IN");
+
   return (
     <div className="w-full h-full p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Income vs Expense */}
       <div className="flex flex-col items-center">
         <h2 className="text-lg font-semibold mb-2">Income vs Expense</h2>
         <Chart
@@ -56,14 +59,23 @@ const DataCharts = () => {
             chart: { type: "bar" },
             xaxis: { categories: ["Income", "Expense"] },
             colors: ["#4caf50", "#f44336"],
+            dataLabels: {
+              formatter: numberFormat,
+            },
           }}
-          series={[{ name: "Amount", data: [income, expense] }]}
+          series={[
+            {
+              name: "Amount",
+              data: [Math.round(income), Math.round(expense)],
+            },
+          ]}
           type="bar"
           width={400}
           height={300}
         />
       </div>
 
+      {/* Expense Breakdown */}
       <div className="flex flex-col items-center">
         <h2 className="text-lg font-semibold mb-2">Expense Breakdown</h2>
         {hasExpenseData ? (
@@ -71,8 +83,13 @@ const DataCharts = () => {
             options={{
               labels: Object.keys(expenseByCategory),
               legend: { position: "bottom" },
+              dataLabels: {
+                formatter: numberFormat,
+              },
             }}
-            series={Object.values(expenseByCategory)}
+            series={Object.values(expenseByCategory).map((v) =>
+              Math.round(v)
+            )}
             type="pie"
             width={400}
             height={300}
@@ -82,6 +99,7 @@ const DataCharts = () => {
         )}
       </div>
 
+      {/* Income Breakdown */}
       <div className="flex flex-col items-center">
         <h2 className="text-lg font-semibold mb-2">Income Breakdown</h2>
         {hasIncomeData ? (
@@ -89,8 +107,13 @@ const DataCharts = () => {
             options={{
               labels: Object.keys(incomeByCategory),
               legend: { position: "bottom" },
+              dataLabels: {
+                formatter: numberFormat,
+              },
             }}
-            series={Object.values(incomeByCategory)}
+            series={Object.values(incomeByCategory).map((v) =>
+              Math.round(v)
+            )}
             type="pie"
             width={400}
             height={300}
@@ -100,6 +123,7 @@ const DataCharts = () => {
         )}
       </div>
 
+      {/* Balance */}
       <div className="flex flex-col items-center">
         <h2 className="text-lg font-semibold mb-2">Balance</h2>
         <Chart
@@ -107,8 +131,16 @@ const DataCharts = () => {
             chart: { type: "bar" },
             xaxis: { categories: ["Balance"] },
             colors: ["#2196f3"],
+            dataLabels: {
+              formatter: numberFormat,
+            },
           }}
-          series={[{ name: "Balance", data: [balance] }]}
+          series={[
+            {
+              name: "Balance",
+              data: [Math.round(balance)],
+            },
+          ]}
           type="bar"
           width={400}
           height={300}

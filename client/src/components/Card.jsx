@@ -77,7 +77,7 @@ function SelectActionCard({ transactions }) {
                 <CardContent sx={{ flex: 1 }}>
                   <Typography variant="h6">{card.name}</Typography>
                   <Typography variant="h4" sx={{ fontWeight: "bold", mt: 1 }}>
-                    ${card.price}
+                    ${Math.round(card.price).toLocaleString("en-US")}
                   </Typography>
                   {card.inc && (
                     <Typography
