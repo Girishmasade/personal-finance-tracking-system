@@ -6,6 +6,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Box,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import { styled } from "@mui/material/styles";
@@ -20,16 +23,21 @@ import {
 import Swal from "sweetalert2";
 
 const DataTable = ({ rows = [] }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       border: "1px solid #ccc",
-      fontSize: 18,
+      fontSize: isMobile ? 14 : 18,
       backgroundColor: theme.palette.grey[300],
       color: theme.palette.grey[600],
+      whiteSpace: "nowrap",
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: 18,
+      fontSize: isMobile ? 14 : 18,
       border: "1px solid #ddd",
+      whiteSpace: "nowrap",
     },
   }));
 
@@ -62,8 +70,7 @@ const DataTable = ({ rows = [] }) => {
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
       });
-      console.log(result);
-      
+
       if (result.isConfirmed) {
         await deleteTransaction(id).unwrap();
         await refetch();
@@ -73,9 +80,7 @@ const DataTable = ({ rows = [] }) => {
           icon: "success",
         });
       }
-      // console.log("Transaction deleted");
     } catch (error) {
-      console.error("Delete failed:", error);
       Swal.fire({
         title: "Error!",
         text: "Failed to delete the transaction.",
@@ -90,83 +95,85 @@ const DataTable = ({ rows = [] }) => {
   };
 
   return (
-    <TableContainer component={Paper} style={{ maxHeight: 500 }}>
-      <Table sx={{ minWidth: 600 }} aria-label="transactions table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Date</StyledTableCell>
-            <StyledTableCell>Category</StyledTableCell>
-            <StyledTableCell>Description</StyledTableCell>
-            <StyledTableCell>Amount</StyledTableCell>
-            <StyledTableCell>Type</StyledTableCell>
-            <StyledTableCell align="right">Actions</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.length > 0 ? (
-            rows.map((row, index) => (
-              <StyledTableRow key={index}>
-                <StyledTableCell>
-                  {new Date(row.date).toLocaleDateString("en-CA")}
-                </StyledTableCell>
-                <StyledTableCell>{row.category}</StyledTableCell>
-                <StyledTableCell>{row.description}</StyledTableCell>
-                <StyledTableCell sx={{ fontWeight: "600" }}>
-                  ${row.amount}
-                </StyledTableCell>
-                <StyledTableCell>
-                  <span
-                    style={{
-                      padding: "4px 8px",
-                      borderRadius: "6px",
-                      fontWeight: 400,
-                      backgroundColor:
-                        row.type === "Expense" ? "#fee2e2" : "#d1fae5",
-                      color: row.type === "Expense" ? "#b91c1c" : "#065f46",
-                    }}
+    <Box sx={{ width: "100%", overflowX: "auto" }}>
+      <TableContainer component={Paper} style={{ maxHeight: 500, minWidth: isMobile ? "600px" : "auto" }}>
+        <Table aria-label="transactions table" stickyHeader>
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Date</StyledTableCell>
+              <StyledTableCell>Category</StyledTableCell>
+              <StyledTableCell>Description</StyledTableCell>
+              <StyledTableCell>Amount</StyledTableCell>
+              <StyledTableCell>Type</StyledTableCell>
+              <StyledTableCell align="right">Actions</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.length > 0 ? (
+              rows.map((row, index) => (
+                <StyledTableRow key={index}>
+                  <StyledTableCell>
+                    {new Date(row.date).toLocaleDateString("en-CA")}
+                  </StyledTableCell>
+                  <StyledTableCell>{row.category}</StyledTableCell>
+                  <StyledTableCell>{row.description}</StyledTableCell>
+                  <StyledTableCell sx={{ fontWeight: "600" }}>
+                    ${row.amount}
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <span
+                      style={{
+                        padding: "4px 8px",
+                        borderRadius: "6px",
+                        fontWeight: 400,
+                        backgroundColor:
+                          row.type === "Expense" ? "#fee2e2" : "#d1fae5",
+                        color: row.type === "Expense" ? "#b91c1c" : "#065f46",
+                      }}
+                    >
+                      {row.type}
+                    </span>
+                  </StyledTableCell>
+                  <StyledTableCell
+                    align="right"
+                    sx={{ display: "flex", gap: "12px" }}
                   >
-                    {row.type}
-                  </span>
-                </StyledTableCell>
-                <StyledTableCell
-                  align="right"
-                  sx={{ display: "flex", gap: "12px" }}
-                >
-                  <IconButton
-                    sx={{ color: "red" }}
-                    onClick={() => handleDelete(row._id)}
-                  >
-                    <DeleteOutlineOutlinedIcon />
-                  </IconButton>
+                    <IconButton
+                      sx={{ color: "red" }}
+                      onClick={() => handleDelete(row._id)}
+                    >
+                      <DeleteOutlineOutlinedIcon />
+                    </IconButton>
 
-                  <IconButton
-                    sx={{ color: "green" }}
-                    onClick={() => handleEdit(row)}
-                  >
-                    <BorderColorOutlinedIcon />
-                  </IconButton>
+                    <IconButton
+                      sx={{ color: "green" }}
+                      onClick={() => handleEdit(row)}
+                    >
+                      <BorderColorOutlinedIcon />
+                    </IconButton>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))
+            ) : (
+              <StyledTableRow>
+                <StyledTableCell colSpan={6} align="center">
+                  No results found.
                 </StyledTableCell>
               </StyledTableRow>
-            ))
-          ) : (
-            <StyledTableRow>
-              <StyledTableCell colSpan={6} align="center">
-                No results found.
-              </StyledTableCell>
-            </StyledTableRow>
-          )}
-        </TableBody>
-      </Table>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       <AddTransactions
         opentransaction={opentransaction}
         setOpenTransaction={(value) => {
           setOpenTransaction(value);
-          if (!value) setEditData(null); // Reset editData when modal closes
+          if (!value) setEditData(null);
         }}
         editData={editData}
       />
-    </TableContainer>
+    </Box>
   );
 };
 

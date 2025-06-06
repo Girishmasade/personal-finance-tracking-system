@@ -11,12 +11,17 @@ import {
   OutlinedInput,
   Paper,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { Person, Security, Download } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import Text from "../components/Text";
-import { useGetUserProfileQuery, useUpdateUserMutation } from "../Redux/app/authApiSlice";
+import {
+  useGetUserProfileQuery,
+  useUpdateUserMutation,
+} from "../Redux/app/authApiSlice";
 import { useSelector } from "react-redux";
 
 const tabItems = [
@@ -38,20 +43,19 @@ const Profile = () => {
     newPassword: "",
     confirmNewPassword: "",
   });
+
   const [updateUser, { isLoading }] = useUpdateUserMutation();
   const { user } = useSelector((state) => state.auth);
+  const { data, isError, error } = useGetUserProfileQuery(user.id);
 
-// console.log(user);
-
-const {data, isError, error} = useGetUserProfileQuery(user.id)
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (form.newPassword && form.newPassword === form.confirmNewPassword) {
     form.password = form.newPassword;
   }
 
-  const handleChange = (index) => {
-    setTab(index);
-  };
+  const handleChange = (index) => setTab(index);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,10 +79,7 @@ const {data, isError, error} = useGetUserProfileQuery(user.id)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateUser({
-        id: user.id,
-        ...form,
-      }).unwrap();
+      await updateUser({ id: user.id, ...form }).unwrap();
       Swal.fire({
         position: "center",
         icon: "success",
@@ -87,7 +88,6 @@ const {data, isError, error} = useGetUserProfileQuery(user.id)
         timer: 1500,
       });
     } catch (error) {
-      console.log(error);
       Swal.fire({
         position: "center",
         icon: "error",
@@ -102,29 +102,33 @@ const {data, isError, error} = useGetUserProfileQuery(user.id)
   if (isError) return <p>Error: {error?.data?.message || "Something went wrong"}</p>;
 
   return (
-    <Box p={4}>
+    <Box p={{ xs: 2, sm: 3, md: 4 }}>
       <Paper elevation={2}>
-        <Box display="flex">
+        <Box
+          display="flex"
+          flexDirection={{ xs: "column", md: "row" }}
+          minHeight="100%"
+        >
           {/* Sidebar */}
           <Box
-            width="250px"
-            borderRight="1px solid #ddd"
-            height="100%"
-            minHeight="500px"
+            width={{ xs: "100%", md: "250px" }}
+            borderRight={{ md: "1px solid #ddd" }}
+            borderBottom={{ xs: "1px solid #ddd", md: "none" }}
           >
-            <List>
+            <List sx={{ display: "flex", flexDirection: { xs: "row", md: "column" } }}>
               {tabItems.map((item, index) => (
                 <ListItem
                   key={item.label}
                   selected={tab === index}
                   onClick={() => handleChange(index)}
                   sx={{
+                    flex: 1,
+                    justifyContent: { xs: "center", md: "flex-start" },
                     cursor: "pointer",
                     backgroundColor: tab === index ? "#f0f0f0" : "inherit",
-                    borderLeft:
-                      tab === index
-                        ? "4px solid #1976d2"
-                        : "4px solid transparent",
+                    borderLeft: {
+                      md: tab === index ? "4px solid #1976d2" : "4px solid transparent",
+                    },
                     color: tab === index ? "#1976d2" : "inherit",
                     fontWeight: tab === index ? "bold" : "normal",
                     "&:hover": {
@@ -133,138 +137,74 @@ const {data, isError, error} = useGetUserProfileQuery(user.id)
                   }}
                 >
                   <ListItemIcon
-                    sx={{
-                      color: tab === index ? "#1976d2" : "inherit",
-                    }}
+                    sx={{ color: tab === index ? "#1976d2" : "inherit", minWidth: 36 }}
                   >
                     {item.icon}
                   </ListItemIcon>
-                  <ListItemText primary={item.label} />
+                  {isSmallScreen ? null : <ListItemText primary={item.label} />}
                 </ListItem>
               ))}
             </List>
           </Box>
 
-          {/* Content Area */}
-          <Box flex={1} p={4}>
+          {/* Main Content */}
+          <Box flex={1} p={{ xs: 2, sm: 3, md: 4 }}>
             {tab === 0 && (
-              <Box>
+              <>
                 <Text
                   title="Personal Information"
                   subTitle="Enter your details to update your profile"
                 />
-
-                <form
-                  onSubmit={handleSubmit}
-                  className="flex flex-wrap flex-col pt-7 gap-4 w-full"
-                >
-                  <FormControl fullWidth sx={{ mb: 2 }}>
-                    <FormLabel>Username</FormLabel>
-                    <OutlinedInput
-                      name="username"
-                      value={form.username}
-                      onChange={handleInputChange}
-                      placeholder="Enter your username"
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 2 }}>
-                    <FormLabel>First Name</FormLabel>
-                    <OutlinedInput
-                      name="firstname"
-                      value={form.firstname}
-                      onChange={handleInputChange}
-                      placeholder="Enter your first name"
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 2 }}>
-                    <FormLabel>Last Name</FormLabel>
-                    <OutlinedInput
-                      name="lastname"
-                      value={form.lastname}
-                      onChange={handleInputChange}
-                      placeholder="Enter your last name"
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 2 }}>
-                    <FormLabel>Email</FormLabel>
-                    <OutlinedInput
-                      type="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleInputChange}
-                      placeholder="Enter your email"
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 2 }}>
-                    <FormLabel>Address</FormLabel>
-                    <OutlinedInput
-                      name="address"
-                      value={form.address}
-                      onChange={handleInputChange}
-                      placeholder="Enter your address"
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 2 }}>
-                    <FormLabel>Phone Number</FormLabel>
-                    <OutlinedInput
-                      name="phone"
-                      value={form.phone}
-                      onChange={handleInputChange}
-                      placeholder="Enter your phone number"
-                    />
-                  </FormControl>
+                <form onSubmit={handleSubmit}>
+                  {[
+                    { label: "Username", name: "username" },
+                    { label: "First Name", name: "firstname" },
+                    { label: "Last Name", name: "lastname" },
+                    { label: "Email", name: "email", type: "email" },
+                    { label: "Address", name: "address" },
+                    { label: "Phone Number", name: "phone" },
+                  ].map(({ label, name, type = "text" }) => (
+                    <FormControl fullWidth sx={{ mb: 2 }} key={name}>
+                      <FormLabel>{label}</FormLabel>
+                      <OutlinedInput
+                        name={name}
+                        type={type}
+                        value={form[name]}
+                        onChange={handleInputChange}
+                        placeholder={`Enter your ${label.toLowerCase()}`}
+                      />
+                    </FormControl>
+                  ))}
                 </form>
-              </Box>
+              </>
             )}
 
             {tab === 1 && (
-              <Box>
+              <>
                 <Typography variant="h6" mb={2}>
                   Security Settings
                 </Typography>
-
-                <FormControl fullWidth sx={{ mb: 2 }}>
-                  <FormLabel>Current Password</FormLabel>
-                  <OutlinedInput
-                    type="password"
-                    name="currentPassword"
-                    value={form.currentPassword}
-                    onChange={handleInputChange}
-                    placeholder="Enter current password"
-                  />
-                </FormControl>
-
-                <FormControl fullWidth sx={{ mb: 2 }}>
-                  <FormLabel>New Password</FormLabel>
-                  <OutlinedInput
-                    type="password"
-                    name="newPassword"
-                    value={form.newPassword}
-                    onChange={handleInputChange}
-                    placeholder="Enter new password"
-                  />
-                </FormControl>
-
-                <FormControl fullWidth sx={{ mb: 2 }}>
-                  <FormLabel>Confirm New Password</FormLabel>
-                  <OutlinedInput
-                    type="password"
-                    name="confirmNewPassword"
-                    value={form.confirmNewPassword}
-                    onChange={handleInputChange}
-                    placeholder="Confirm new password"
-                  />
-                </FormControl>
-              </Box>
+                {[
+                  { label: "Current Password", name: "currentPassword" },
+                  { label: "New Password", name: "newPassword" },
+                  { label: "Confirm New Password", name: "confirmNewPassword" },
+                ].map(({ label, name }) => (
+                  <FormControl fullWidth sx={{ mb: 2 }} key={name}>
+                    <FormLabel>{label}</FormLabel>
+                    <OutlinedInput
+                      type="password"
+                      name={name}
+                      value={form[name]}
+                      onChange={handleInputChange}
+                      placeholder={`Enter ${label.toLowerCase()}`}
+                    />
+                  </FormControl>
+                ))}
+              </>
             )}
 
             {tab === 2 && (
-              <Box>
+              <>
                 <Typography variant="h6" mb={2}>
                   Export Your Data
                 </Typography>
@@ -275,7 +215,7 @@ const {data, isError, error} = useGetUserProfileQuery(user.id)
                 <Button variant="contained" color="primary">
                   Export Data
                 </Button>
-              </Box>
+              </>
             )}
 
             {tab !== 2 && (
