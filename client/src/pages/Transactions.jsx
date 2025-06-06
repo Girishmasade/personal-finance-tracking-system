@@ -18,8 +18,8 @@ const Transactions = () => {
   const [search, setSearch] = useState("");
   const [type, setType] = useState("All Types");
   const [category, setCategory] = useState("All Categories");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
+  const [month, setMonth] = useState("month");
+  const [year, setYear] = useState("All Years");
 
   const { data, error, isLoading } = useGetTransactionsQuery();
   const transactions = data?.transaction || [];
@@ -32,36 +32,39 @@ const Transactions = () => {
         .includes(search.toLowerCase()) &&
       (type === "All Types" || row.type === type) &&
       (category === "All Categories" || row.category === category) &&
-      (month === "" || new Date(row.date).getMonth() + 1 === parseInt(month)) &&
-      (year === "" || new Date(row.date).getFullYear() === parseInt(year))
+      (month === "month" || new Date(row.date).getMonth() + 1 === parseInt(month)) &&
+      (year === "All Years" || new Date(row.date).getFullYear() === parseInt(year))
   );
 
   const handleReset = () => {
     setSearch("");
     setType("All Types");
     setCategory("All Categories");
-    setMonth("");
-    setYear("");
+    setMonth("month");
+    setYear("All Years");
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   const months = [
-    { label: "January", value: 1 },
-    { label: "February", value: 2 },
-    { label: "March", value: 3 },
-    { label: "April", value: 4 },
-    { label: "May", value: 5 },
-    { label: "June", value: 6 },
-    { label: "July", value: 7 },
-    { label: "August", value: 8 },
-    { label: "September", value: 9 },
-    { label: "October", value: 10 },
-    { label: "November", value: 11 },
-    { label: "December", value: 12 },
+    { label: "All Months", value: "month" },
+    { label: "January", value: "01" },
+    { label: "February", value: "02" },
+    { label: "March", value: "03" },
+    { label: "April", value: "04" },
+    { label: "May", value: "05" },
+    { label: "June", value: "06" },
+    { label: "July", value: "07" },
+    { label: "August", value: "08" },
+    { label: "September", value: "09" },
+    { label: "October", value: "10" },
+    { label: "November", value: "11" },
+    { label: "December", value: "12" },
   ];
 
-  if(isLoading) {
-    return <Loading/>
-  }
+  const years = ["All Years" ,"2025", "2024", "2023", "2022", "2021", "2020"];
 
   return (
     <Box p={2}>
@@ -108,6 +111,7 @@ const Transactions = () => {
           </TextField>
         </Grid>
 
+            {/*Month Dropdown  */}
         <Grid item xs={12} sm={6} md={3}>
           <TextField
             select
@@ -116,10 +120,27 @@ const Transactions = () => {
             value={month}
             onChange={(e) => setMonth(e.target.value)}
           >
-            <MenuItem value={"m"}>Months</MenuItem>
             {months.map((m) => (
               <MenuItem key={m.value} value={m.value}>
                 {m.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+
+         {/*Year Dropdown  */}
+
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            select
+            fullWidth
+            size="small"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+          >
+            {years.map((y) => (
+              <MenuItem key={y} value={y}>
+                {y}
               </MenuItem>
             ))}
           </TextField>
