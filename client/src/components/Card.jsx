@@ -28,13 +28,11 @@ function SelectActionCard({ transactions }) {
       name: "Total Income",
       icon: ArrowCircleUpRoundedIcon,
       price: totalIncome,
-      inc: "+5.2% from last month",
     },
     {
       name: "Total Expense",
       icon: ArrowCircleDownRoundedIcon,
       price: totalExpense,
-      inc: "-2.4% from last month",
     },
     {
       name: "Balance",
@@ -98,17 +96,6 @@ function SelectActionCard({ transactions }) {
                         minimumFractionDigits: 2,
                       })}
                     </Typography>
-                    {card.inc && (
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: isPositive ? "#4ade80" : "#ef4444",
-                          mt: 1,
-                        }}
-                      >
-                        {card.inc}
-                      </Typography>
-                    )}
                   </CardContent>
 
                   <Box

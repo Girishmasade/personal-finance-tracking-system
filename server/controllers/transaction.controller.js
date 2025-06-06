@@ -125,48 +125,55 @@ export const deleteTransaction = async (req, res) => {
   }
 };
 
+import fs from 'fs';
+import path from 'path';
+import xlsx from 'xlsx';
+import Transaction from '../models/transactionModel.js'; // adjust path as needed
+
 export const uploadExcelTransaction = async (req, res) => {
   try {
-    // console.log(req.file);
-
     const user = req.user._id;
 
     if (!req.file) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No file uploaded" });
+      return res.status(400).json({ success: false, message: "No file uploaded" });
     }
 
     const filePath = path.resolve(req.file.path);
-    const workbook = xlsx.readFile(filePath);
+    const workbook = xlsx.readFile(filePath, { cellDates: true });
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
 
     const rows = xlsx.utils.sheet_to_json(sheet);
-    // console.log(rows);
 
-    const Dates = rows.map((row) =>
-      new Date(row.date).toLocaleDateString("en-CA")
-    );
+    if (!rows.length) {
+      return res.status(400).json({ success: false, message: "Sheet is empty" });
+    }
+    
+    const Dates = rows.map(row => new Date(row.date).toISOString().split("T")[0]);
 
-    const checkDates = await Transaction.find({
+    const existing = await Transaction.find({
       date: { $in: Dates },
-      isDelete: { $ne: true },
       userRef: user,
-    }); //it's check in database the date avilable or not
-    console.log(checkDates);
+      isDelete: { $ne: true }
+    }).select("date -_id");
 
-    if (checkDates.length !== 0) {
+    const existingDates = new Set(existing.map(t => new Date(t.date).toISOString().split("T")[0]));
+
+    const filteredRows = rows.filter(row => {
+      const normalizedDate = new Date(row.date).toISOString().split("T")[0];
+      return !existingDates.has(normalizedDate);
+    });
+
+    if (filteredRows.length === 0) {
       return res.status(400).json({
         success: false,
-        message: `Transaction for ${checkDates
-          .map((row) => row.date)
-          .join(",")} This Date already exists!`,
+        message: "All transactions in this file already exist.",
       });
     }
 
-    const transactions = rows.map((row) => ({
-      date: new Date(row.date).toLocaleDateString("en-CA"),
+    // Build transaction objects
+    const transactions = filteredRows.map((row) => ({
+      date: new Date(row.date),
       amount: Number(row.amount),
       category: row.category,
       description: row.description,
@@ -174,24 +181,28 @@ export const uploadExcelTransaction = async (req, res) => {
       userRef: user,
     }));
 
-    // console.log(transactions)
-
-    await Transaction.insertMany(transactions);
+    // Batch insert in chunks (e.g., 500 at a time)
+    const BATCH_SIZE = 500;
+    for (let i = 0; i < transactions.length; i += BATCH_SIZE) {
+      const batch = transactions.slice(i, i + BATCH_SIZE);
+      await Transaction.insertMany(batch);
+    }
 
     return res.status(200).json({
       success: true,
-      message: `${transactions.length} transactions imported`,
+      message: `${transactions.length} transactions imported successfully.`,
     });
   } catch (error) {
     console.error("Import failed:", error);
     return res.status(500).json({ success: false, message: error.message });
-  } finally{
-    if (fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path)
-      console.log("File deleted successfully");
+  } finally {
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+      console.log("Excel file deleted after processing.");
     }
   }
 };
+
 
 export const getDeletedTransaction = async (req, res) => {
   try {
