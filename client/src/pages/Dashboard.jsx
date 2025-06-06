@@ -4,10 +4,11 @@ import Text from '../components/Text'
 import { Box } from '@mui/material'
 import { useGetTransactionsQuery } from '../Redux/app/transactionApiSlice'
 import SelectActionCard from '../components/Card'
+import Loading from '../components/Loading'
 
 const Dashboard = () => {
 
-  const {data} = useGetTransactionsQuery(undefined, {
+  const {data, isLoading} = useGetTransactionsQuery(undefined, {
     refetchOnFocus: true,
     refetchOnReconnect: true,
     refetchOnMountOrArgChange: true
@@ -22,6 +23,10 @@ const Dashboard = () => {
       
     //   return <Navigate to={"/login"} />;
     // }
+
+     if(isLoading) {
+        return <Loading/>
+      }
 
   return (
     <div>

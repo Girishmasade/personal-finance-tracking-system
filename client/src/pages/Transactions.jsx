@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useGetTransactionsQuery } from "../Redux/app/transactionApiSlice";
+import Loading from "../components/Loading";
 
 const Transactions = () => {
   const [search, setSearch] = useState("");
@@ -57,6 +58,10 @@ const Transactions = () => {
     { label: "November", value: 11 },
     { label: "December", value: 12 },
   ];
+
+  if(isLoading) {
+    return <Loading/>
+  }
 
   return (
     <Box p={2}>
