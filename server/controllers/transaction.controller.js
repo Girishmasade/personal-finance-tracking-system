@@ -125,11 +125,6 @@ export const deleteTransaction = async (req, res) => {
   }
 };
 
-import fs from 'fs';
-import path from 'path';
-import xlsx from 'xlsx';
-import Transaction from '../models/transactionModel.js'; // adjust path as needed
-
 export const uploadExcelTransaction = async (req, res) => {
   try {
     const user = req.user._id;

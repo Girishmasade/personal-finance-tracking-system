@@ -23,8 +23,10 @@ const UploadTransaction = ({ openUploadFile, setOpenUploadFile }) => {
   };
 
   const [uploadTransacationFile, { isLoading, error }] =
-    useUploadTransacationFileMutation();
+    useUploadTransacationFileMutation({limit: 500 });
   const handleUpload = async () => {
+
+  
     try {
       // console.log(file);
 

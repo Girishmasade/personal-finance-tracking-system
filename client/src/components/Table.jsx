@@ -54,7 +54,14 @@ const DataTable = ({ rows = [] }) => {
   }));
 
   const [deleteTransaction] = useDeleteTransactionsMutation();
-  const { refetch } = useGetTransactionsQuery();
+  const { refetch } = useGetTransactionsQuery(
+    {
+      refetchOnFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: true
+
+    }
+  );
 
   const [editData, setEditData] = useState(null);
   const [opentransaction, setOpenTransaction] = useState(false);
