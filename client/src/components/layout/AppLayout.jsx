@@ -16,6 +16,7 @@ import {
   useTheme,
   useMediaQuery,
   ListItemButton,
+  Divider,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -109,12 +110,25 @@ const AppLayout = ({ mode, toggleTheme }) => {
                   variant="contained"
                   size="small"
                   onClick={() => setOpenTransaction(true)}
+                  sx={{
+                    bgcolor: mode === "dark" ? "#1976d2" : "#000000",
+                    color: "#ffffff",
+                    "&:hover": {
+                      bgcolor: mode === "dark" ? "#115293" : "#333333",
+                    },
+                  }}
                 >
                   Add Transaction
                 </Button>
+                  
                 <IconButton
                   onClick={() => setOpenUploadFile(true)}
-                  color="primary"
+                  sx={{
+                    color: mode === "dark" ? "#1976d2" : "#000000",
+                    "&:hover": {
+                      color: mode === "dark" ? "#115293" : "#333333",
+                    },
+                  }}
                 >
                   <FileUploadIcon />
                 </IconButton>
@@ -139,8 +153,8 @@ const AppLayout = ({ mode, toggleTheme }) => {
             </IconButton>
           </Box>
         </Toolbar>
+        <Divider sx={{ width: "100%", mt: 1 }} />
       </AppBar>
-
       <Drawer
         variant={isMobile ? "temporary" : "permanent"}
         open={open}
@@ -176,7 +190,9 @@ const AppLayout = ({ mode, toggleTheme }) => {
                     to={item.path}
                     sx={{
                       color: isActive ? "blue" : "inherit",
-                      backgroundColor: isActive ? "rgba(0, 0, 255, 0.1)" : "transparent",
+                      backgroundColor: isActive
+                        ? "rgba(0, 0, 255, 0.1)"
+                        : "transparent",
                     }}
                   >
                     <ListItemIcon sx={{ color: isActive ? "blue" : "inherit" }}>
