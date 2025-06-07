@@ -193,7 +193,7 @@ export const uploadExcelTransaction = async (req, res) => {
   } finally {
     if (req.file && fs.existsSync(req.file.path)) {
       fs.unlinkSync(req.file.path);
-      console.log("Excel file deleted after processing.");
+      // console.log("Excel file deleted after processing.");
     }
   }
 };
