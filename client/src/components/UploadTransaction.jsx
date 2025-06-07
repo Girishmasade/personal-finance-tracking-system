@@ -56,6 +56,15 @@ const UploadTransaction = ({ openUploadFile, setOpenUploadFile }) => {
     }
   };
 
+  if (error) {
+    console.error("Error uploading file:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Failed to upload file. Please try again.",
+    });
+  }
+
   return (
     <Dialog
       open={openUploadFile}
@@ -116,7 +125,7 @@ const UploadTransaction = ({ openUploadFile, setOpenUploadFile }) => {
           {isLoading ? "uploading...." : "upload"}
         </Button>
       </DialogActions>
-      {error ? <p>Here is the error to upload a file</p> : ""}
+      {/* {error ? <p>Here is the error to upload a file</p> : ""} */}
     </Dialog>
   );
 };
