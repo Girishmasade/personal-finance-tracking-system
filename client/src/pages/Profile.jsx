@@ -26,8 +26,7 @@ import { useSelector } from "react-redux";
 
 const tabItems = [
   { icon: <Person />, label: "Profile" },
-  { icon: <Security />, label: "Security" },
-  { icon: <Download />, label: "Export Data" },
+  { icon: <Security />, label: "Change Password" },
 ];
 
 const Profile = () => {
