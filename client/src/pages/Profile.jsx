@@ -182,7 +182,7 @@ const Profile = () => {
             {tab === 1 && (
               <>
                 <Typography variant="h6" mb={2}>
-                  Security Settings
+                  Change password
                 </Typography>
                 {[
                   { label: "Current Password", name: "currentPassword" },
@@ -200,21 +200,6 @@ const Profile = () => {
                     />
                   </FormControl>
                 ))}
-              </>
-            )}
-
-            {tab === 2 && (
-              <>
-                <Typography variant="h6" mb={2}>
-                  Export Your Data
-                </Typography>
-                <Typography variant="body1" mb={2}>
-                  Download a copy of your personal data including your profile,
-                  payment history, and activity logs.
-                </Typography>
-                <Button variant="contained" color="primary">
-                  Export Data
-                </Button>
               </>
             )}
 
