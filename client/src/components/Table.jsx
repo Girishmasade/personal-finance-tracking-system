@@ -54,7 +54,7 @@ const DataTable = ({ rows = [] }) => {
   }));
 
   const [deleteTransaction] = useDeleteTransactionsMutation();
-  const { refetch } = useGetTransactionsQuery(
+  const { refetch } = useGetTransactionsQuery(undefined,
     {
       refetchOnFocus: true,
     refetchOnReconnect: true,

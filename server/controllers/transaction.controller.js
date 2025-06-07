@@ -304,19 +304,29 @@ export const restoreAllTransaction = async (req, res) => {
 
 export const deleteAllTransactions = async (req, res) => {
   try {
-    const user = req.user._id
-    const deleteAll = await Transaction.deleteMany({ isDelete: true, userRef: user});
-    // console.log(deleteAll);
+    const userId = req.user?._id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: User not found in request.",
+      });
+    }
+
+    const deleteAll = await Transaction.deleteMany({
+      isDelete: true,
+    }, {userRef: userId});
+
     res.status(200).json({
       success: true,
-      message: "All soft-deleted transactions have been removed",
+      message: "All trashed transactions deleted successfully.",
       deletedCount: deleteAll.deletedCount,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error in deleteAllTransactions:", error);
     res.status(500).json({
       success: false,
-      message: "Error deleting transactions",
+      message: "Error deleting trashed transactions",
       error: error.message,
     });
   }

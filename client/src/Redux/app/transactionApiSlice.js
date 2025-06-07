@@ -73,7 +73,7 @@ export const transactionApiSlice = apiSlice.injectEndpoints({
     deleteAllTransaction: builder.mutation({
       query: () => ({
         url: `${TRANSACTION_URI}/delete-all-transaction`,
-        method: "DELETE"
+        method: "DELETE",
       }),
     }),
   }),

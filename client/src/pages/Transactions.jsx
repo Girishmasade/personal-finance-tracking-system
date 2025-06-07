@@ -21,7 +21,11 @@ const Transactions = () => {
   const [month, setMonth] = useState("month");
   const [year, setYear] = useState("All Years");
 
-  const { data, error, isLoading } = useGetTransactionsQuery();
+  const { data, error, isLoading } = useGetTransactionsQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: true
+  });
   const transactions = data?.transaction || [];
 
   const filteredRows = transactions.filter(

@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CloseIcon from "@mui/icons-material/Close";
-import { useUploadTransacationFileMutation } from "../Redux/app/transactionApiSlice";
+import { useGetTransactionsQuery, useUploadTransacationFileMutation } from "../Redux/app/transactionApiSlice";
 import Swal from "sweetalert2";
 
 const UploadTransaction = ({ openUploadFile, setOpenUploadFile }) => {
@@ -22,11 +22,10 @@ const UploadTransaction = ({ openUploadFile, setOpenUploadFile }) => {
     setFile(e.target.files[0]);
   };
 
-  const [uploadTransacationFile, { isLoading, error }] =
-    useUploadTransacationFileMutation({limit: 500 });
-  const handleUpload = async () => {
-
+  const [uploadTransacationFile, { isLoading, error }] = useUploadTransacationFileMutation();
+   const { refetch } = useGetTransactionsQuery();
   
+  const handleUpload = async () => {
     try {
       // console.log(file);
 
@@ -34,7 +33,8 @@ const UploadTransaction = ({ openUploadFile, setOpenUploadFile }) => {
       formData.append("file", file);
 
       const res = await uploadTransacationFile(formData).unwrap();
-      console.log("Uploading file:", res);
+      refetch()
+      // console.log("Uploading file:", res);
       if (res.ok) {
         Swal.fire({
           position: "center",

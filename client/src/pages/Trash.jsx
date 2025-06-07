@@ -18,6 +18,7 @@ import {
 import { RestoreFromTrash, DeleteForever } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import {
+  useDeleteAllTransactionMutation,
   useGetTrashTransactionsQuery,
   usePermenantlyDeleteTransactionsMutation,
   useRestoreAllTransactionMutation,
@@ -48,10 +49,15 @@ const Trash = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { data: trashTransaction = [], refetch: refetchTrash } = useGetTrashTransactionsQuery();
+  const { data: trashTransaction = [], refetch: refetchTrash } = useGetTrashTransactionsQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: true
+  });
   const [permanentlyDeleteTransaction] = usePermenantlyDeleteTransactionsMutation();
   const [restoreTransaction] = useRestoreTransactionMutation();
   const [restoreAllTransaction] = useRestoreAllTransactionMutation();
+  const [deleteAllTransaction] = useDeleteAllTransactionMutation();
 
   const handleDelete = async (id) => {
     try {
@@ -126,7 +132,7 @@ const Trash = () => {
       });
 
       if (confirmed.isConfirmed) {
-        const res = await permanentlyDeleteTransaction("all").unwrap(); // Make sure your API supports this
+        const res = await deleteAllTransaction().unwrap(); // Make sure your API supports this
         await refetchTrash();
         Swal.fire({
           icon: "success",
