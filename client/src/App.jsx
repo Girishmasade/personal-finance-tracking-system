@@ -39,7 +39,6 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <main className="w-full min-h-screen">
         <Routes>
           <Route path="/register" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -94,7 +93,6 @@ const App = () => {
             />
           </Route>
         </Routes>
-      </main>
     </ThemeProvider>
   );
 };

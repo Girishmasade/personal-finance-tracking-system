@@ -8,7 +8,7 @@ import {
   InputAdornment,
   IconButton,
   Paper,
-  Link as MuiLink 
+  Link as MuiLink,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -22,10 +22,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
@@ -64,27 +61,42 @@ const LoginPage = () => {
   };
 
   const { token } = useSelector((state) => state.auth);
-  // console.log(token);
-  
-  if (token) {
-    // console.log("redirecting....");
-    return <Navigate to={"/dashboard"} />;
-  }
+  if (token) return <Navigate to={"/dashboard"} />;
 
   return (
     <Grid
       container
       component="main"
-      sx={{ height: "100vh", backgroundColor: "#f5f5f5" }}
+      sx={{
+        height: "100vh",
+        backgroundImage: "url('/login_background.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backdropFilter: "blur(5px)", // fallback in case browser supports it on Grid
+      }}
       justifyContent="center"
       alignItems="center"
     >
-      <Grid>
-        <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
+      <Grid item>
+        <Paper
+          elevation={6}
+          sx={{
+            p: 4,
+            borderRadius: 4,
+            width: { xs: "90vw", sm: "400px" },
+            background: "rgba(255, 255, 255, 0.2)",
+            backdropFilter: "blur(15px)",
+            WebkitBackdropFilter: "blur(15px)",
+            boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+            color: "#fff",
+            border: "1px solid rgba(255, 255, 255, 0.18)",
+          }}
+        >
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             Login to Your Account
           </Typography>
-          <Typography variant="body2" color="text.secondary" mb={3}>
+          <Typography variant="body2" sx={{ mb: 3 }}>
             Please enter your credentials to continue.
           </Typography>
 
@@ -99,6 +111,12 @@ const LoginPage = () => {
               value={form.email}
               onChange={handleChange}
               required
+              InputLabelProps={{
+                style: { color: "#fff" },
+              }}
+              InputProps={{
+                style: { color: "#fff" }, // white input text
+              }}
             />
 
             <TextField
@@ -111,12 +129,15 @@ const LoginPage = () => {
               value={form.password}
               onChange={handleChange}
               required
+              InputLabelProps={{ style: { color: "#fff" } }}
               InputProps={{
+                style: { color: "#fff" }, // white input text
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
                       onClick={() => setShowPassword((prev) => !prev)}
                       edge="end"
+                      sx={{ color: "#fff" }}
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -124,8 +145,6 @@ const LoginPage = () => {
                 ),
               }}
             />
-
-            {/* Removed Remember me checkbox */}
 
             <Box
               sx={{
@@ -136,24 +155,21 @@ const LoginPage = () => {
                 mt: 2,
               }}
             >
-              {/* Forgot Password */}
               <MuiLink
                 component={Link}
                 to="/forget-password"
                 underline="hover"
-                color="primary"
+                color="inherit"
                 sx={{ fontSize: 14 }}
               >
                 Forgot Password?
               </MuiLink>
 
-              {/* Sign Up Row */}
               <Box
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  width: "100%",
                 }}
               >
                 <Typography variant="body2">Don't have an account?</Typography>
@@ -161,8 +177,8 @@ const LoginPage = () => {
                   component={Link}
                   to="/register"
                   underline="hover"
-                  color="primary"
                   sx={{ fontWeight: 500 }}
+                  color="inherit"
                 >
                   Sign Up
                 </MuiLink>
@@ -181,7 +197,7 @@ const LoginPage = () => {
                 "&:hover": { backgroundColor: "#333" },
               }}
             >
-              {isLoading ? "Logging..." : " Login"}
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
           </form>
         </Paper>
