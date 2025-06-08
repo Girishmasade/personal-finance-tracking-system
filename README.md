@@ -28,7 +28,8 @@ A full-stack Finance Tracking application built with the MERN (MongoDB, Express.
 
 ## 📸 Screenshots
 
-> Add screenshots of your Dashboard, Login/Register, Add Transaction page here.
+/home/lenovo/Pictures/Screenshots/Screenshot from 2025-06-08 15-48-07.png
+/home/lenovo/Pictures/Screenshots/Screenshot from 2025-06-08 15-48-38.png
 
 ---
 
