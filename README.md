@@ -32,7 +32,7 @@ A full-stack Finance Tracking application built with the MERN (MongoDB, Express.
 
 ![Dashboard](https://raw.githubusercontent.com/Girishmasade/personal-finance-tracking-system/dd80dc616d4e124197af532ac05844d3e250334f/client/src/assets/Screenshot%20from%202025-06-08%2015-48-07.png)
 
-![Report](https://raw.githubusercontent.com/Girishmasade/personal-finance-tracking-system/dd80dc616d4e124197af532ac05844d3e250334f/client/src/assets/Screenshot%20from%202025-06-08%2015-48-38.png)
+![Report](https://github.com/Girishmasade/personal-finance-tracking-system/blob/dd80dc616d4e124197af532ac05844d3e250334f/client/src/assets/Screenshot%20from%202025-06-08%2015-48-38.png)
 
 
 ---
