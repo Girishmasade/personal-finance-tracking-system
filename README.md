@@ -28,7 +28,7 @@ A full-stack Finance Tracking application built with the MERN (MongoDB, Express.
 
 ## 📸 Screenshots
 
-/home/lenovo/Pictures/Screenshots/Screenshot from 2025-06-08 15-48-07.png
+![alt text](https://github.com/Girishmasade/personal-finance-tracking-system/blob/04c9ad5d18bfc42686d7a736e47168da91a8ec7f/client/src/assets/Screenshot%20from%202025-06-08%2015-54-42.png)
 /home/lenovo/Pictures/Screenshots/Screenshot from 2025-06-08 15-48-38.png
 
 ---
