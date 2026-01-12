@@ -21,7 +21,7 @@
     "react-apexcharts": "^1.7.0",
     "react-dom": "^19.1.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.6.0",
+    "react-router-dom": "^7.12.0",
     "react-spinners": "^0.17.0",
     "sweetalert2": "^11.22.0"
   },
